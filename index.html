@@ -132,7 +132,7 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACION
 // ══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbwGKAreb_VIb0rwQINp0RzOrXHnSMEwknh5wmDhgXPIugW2LIBT5fYl8v8fOEfXJUaMHg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzUWjX_YgMsM7GrrZezxVUKxpyfx5lF4LqbhOj2iCxpKkzL-n3IcXeaaZAJ9DXiMNkhqg/exec';
 // ══════════════════════════════════════════════════════════════
 
 // ── API (JSONP para GET, iframe para POST — evita CORS) ──
@@ -406,7 +406,7 @@ function rMan(){
   else filtered.forEach(m=>{
     const folderName=ST.folders.find(f=>f.id===m.folder)?.name||'General';
     const icon=m.tipo==='youtube'?'VID':'PDF';
-    const iconColor=m.tipo==='youtube'?red:pink;
+    const iconColor=m.tipo==='youtube'?'E24B4A':'D4537E';
     h+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(ed?'<button class="btn-danger" onclick="deleteManual(\''+m.id+'\')">Eliminar</button>':'')+'</div></div>'});
   h+='</div>';return h;
 }
@@ -618,10 +618,12 @@ async function submitTask(){
   const deadline=document.getElementById('mt-deadline').value;
   if(!title){toast('El título es obligatorio');return}
   const task={id:'task-'+Date.now(),title,description:desc,createdBy:currentUser.user,assignedTo:assigned,deadline,priority:prio,status:'pendiente',created:new Date().toISOString()};
-  ST.tasks.push(task);cacheLocal();await cloud('saveTask',{task});ST.modal=null;render();toast('Tarea creada');
+  ST.tasks.push(task);cacheLocal();await cloud('saveTask',{task,notify:true,notifyType:'nueva'});ST.modal=null;render();toast('Tarea creada — notificación enviada');
 }
 async function changeTaskStatus(id,status){
-  const t=ST.tasks.find(x=>x.id===id);if(!t)return;t.status=status;cacheLocal();await cloud('saveTask',{task:t});render();toast('Estado actualizado');
+  const t=ST.tasks.find(x=>x.id===id);if(!t)return;t.status=status;cacheLocal();
+  const tipo=status==='completada'?'completada':'estado';
+  await cloud('saveTask',{task:t,notify:true,notifyType:tipo});render();toast('Estado actualizado — notificación enviada');
 }
 async function deleteTask(id){
   ST.tasks=ST.tasks.filter(t=>t.id!==id);ST.taskComments=ST.taskComments.filter(c=>c.taskId!==id);cacheLocal();await cloud('deleteTask',{id});ST.modal=null;render();toast('Tarea eliminada');
@@ -796,7 +798,7 @@ async function deleteFolder(id){
 // 1. Ve a aistudio.google.com
 // 2. Pulsa "Get API key" → "Create API key"
 // 3. Pega la key aquí abajo
-const GEMINI_KEY = 'AIzaSyAChcYkAX8Y42lsuYw0KX2pa2C8SNe3u6c';
+const GEMINI_KEY = 'PEGAR_AQUI_TU_GEMINI_KEY';
 function geminiOk(){return GEMINI_KEY&&GEMINI_KEY!=='PEGAR_AQUI_TU_GEMINI_KEY'&&GEMINI_KEY.length>10}
 let chatMessages=[];
 
@@ -981,7 +983,7 @@ function rSal(){
   const totalL=ST.repostajes.reduce((a,r)=>a+r.litros,0);
   const consumo=totalKm>0&&totalL>0?Math.round((totalL/totalKm)*100*10)/10:0;
 
-  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Registro de salidas del vehículo</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addSalida\';ST.formData={};render()">+ Registrar salida</button>':'')+'</div>';
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Registro de salidas del vehículo</h3><div style="display:flex;gap:8px">'+(ST.salidas.length?'<button class="btn btn-sm" onclick="generarInforme()">📋 Generar informe</button>':'')+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addSalida\';ST.formData={};render()">+ Registrar salida</button>':'')+'</div></div>';
   // Summary cards
   h+='<div class="stats-grid" style="margin-bottom:16px"><div class="stat-card"><span class="label">Km totales</span><span class="value">'+totalKm.toLocaleString('es-ES')+'</span></div><div class="stat-card"><span class="label">Litros</span><span class="value">'+totalL.toLocaleString('es-ES')+'</span></div><div class="stat-card"><span class="label">Consumo medio</span><span class="value">'+(consumo?consumo+' L/100':'—')+'</span></div><div class="stat-card"><span class="label">En ruta</span><span class="value" style="color:#E8A817">'+counts.en_ruta+'</span></div></div>';
   // Filters
@@ -1165,6 +1167,84 @@ async function submitManual(){
 }
 async function deleteManual(id){
   ST.manuals=ST.manuals.filter(m=>m.id!==id);cacheLocal();await cloud('deleteManual',{id});render();toast('Documento eliminado');
+}
+
+// ═══════════ INFORME DE SALIDAS ═══════════
+function generarInforme(){
+  const salidas=ST.salidas.sort((a,b)=>a.fechaSalida>b.fechaSalida?1:-1);
+  const totalKm=salidas.filter(s=>s.kmFin>0).reduce((a,s)=>a+(s.kmFin-s.kmInicio),0);
+  const totalL=ST.repostajes.reduce((a,r)=>a+r.litros,0);
+  const consumo=totalKm>0&&totalL>0?Math.round((totalL/totalKm)*100*10)/10:0;
+  const now=new Date().toLocaleString('es-ES');
+
+  let txt='';
+  txt+='══════════════════════════════════════════════════\n';
+  txt+='  INFORME DE SALIDAS — BASE LITORAL | BRAVO3\n';
+  txt+='  Generado: '+now+'\n';
+  txt+='══════════════════════════════════════════════════\n\n';
+  txt+='RESUMEN GENERAL\n';
+  txt+='────────────────────────────────────────────────\n';
+  txt+='Total de salidas: '+salidas.length+'\n';
+  txt+='Finalizadas: '+salidas.filter(s=>s.estado==='finalizada').length+'\n';
+  txt+='En ruta: '+salidas.filter(s=>s.estado==='en_ruta').length+'\n';
+  txt+='Kilómetros totales: '+totalKm.toLocaleString('es-ES')+' km\n';
+  txt+='Litros repostados: '+totalL.toLocaleString('es-ES')+' L\n';
+  txt+='Consumo medio: '+(consumo?consumo+' L/100km':'Sin datos suficientes')+'\n';
+  txt+='Total repostajes: '+ST.repostajes.length+'\n\n';
+
+  txt+='DETALLE DE SALIDAS\n';
+  txt+='══════════════════════════════════════════════════\n\n';
+
+  salidas.forEach((s,idx)=>{
+    const kmRec=s.kmFin>0?(s.kmFin-s.kmInicio):0;
+    const repos=ST.repostajes.filter(r=>r.salidaId===s.id);
+    txt+='── Salida #'+(idx+1)+' ──────────────────────────────\n';
+    txt+='Conductor: '+s.conductorNombre+'\n';
+    txt+='Ruta: '+s.origen+' → '+s.destino+'\n';
+    txt+='Motivo: '+s.motivo+'\n';
+    txt+='Estado: '+s.estado.replace('_',' ')+'\n';
+    txt+='Km inicio: '+s.kmInicio+' | Km fin: '+(s.kmFin||'—')+' | Recorrido: '+(kmRec||'—')+' km\n';
+    txt+='Salida: '+fmtDT(s.fechaSalida)+'\n';
+    if(s.fechaLlegada)txt+='Llegada: '+fmtDT(s.fechaLlegada)+'\n';
+    if(s.comentarios)txt+='Observaciones: '+s.comentarios+'\n';
+    if(repos.length){
+      txt+='Repostajes:\n';
+      repos.forEach(r=>{
+        txt+='   ⛽ '+r.litros+' L a '+r.km+' km';
+        if(r.ubicacion)txt+=' — '+r.ubicacion;
+        txt+=' ('+fmtDT(r.fecha)+')\n';
+      });
+    }
+    txt+='\n';
+  });
+
+  // Tabla resumen por conductor
+  const conductores={};
+  salidas.forEach(s=>{
+    if(!conductores[s.conductorNombre])conductores[s.conductorNombre]={salidas:0,km:0,litros:0};
+    conductores[s.conductorNombre].salidas++;
+    if(s.kmFin>0)conductores[s.conductorNombre].km+=(s.kmFin-s.kmInicio);
+  });
+  ST.repostajes.forEach(r=>{
+    const sal=salidas.find(s=>s.id===r.salidaId);
+    if(sal&&conductores[sal.conductorNombre])conductores[sal.conductorNombre].litros+=r.litros;
+  });
+
+  txt+='RESUMEN POR CONDUCTOR\n';
+  txt+='══════════════════════════════════════════════════\n';
+  Object.entries(conductores).forEach(([nombre,data])=>{
+    txt+=nombre+': '+data.salidas+' salida(s), '+data.km+' km, '+data.litros+' L\n';
+  });
+
+  // Descargar como archivo de texto
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='informe_salidas_bravo3_'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.appendChild(a);a.click();a.remove();
+  URL.revokeObjectURL(url);
+  toast('Informe descargado');
 }
 
 // ═══════════ ARRANQUE ═══════════
