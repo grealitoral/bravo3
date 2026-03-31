@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4A5D23">
+<title>BASE LITORAL | BRAVO3</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231A1A2E'/><text x='50' y='68' font-size='48' font-weight='900' text-anchor='middle' fill='white' font-family='monospace'>B3</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{font-family:'DM Sans',system-ui,sans-serif;background:#FAFBFC;color:#4A5D23;min-height:100vh;overflow-x:hidden}
+:root{--navy:#4A5D23;--blue:#378ADD;--pink:#D4537E;--amber:#E8A817;--green:#1D9E75;--border:#EFEFEF;--text2:#888;--text3:#BBB;--card:#FFF;--radius:12px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes checkPop{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#DDD;border-radius:3px}
+
+/* LOGIN */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#4A5D23 0%,#5C7A2E 50%,#4A5D23 100%)}
+.login-card{background:#fff;border-radius:20px;padding:40px 32px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fadeIn .4s ease}
+.login-card .logo-big{width:64px;height:64px;border-radius:14px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;font-family:'JetBrains Mono',monospace;margin:0 auto 16px}
+.login-card h1{text-align:center;font-size:22px;font-weight:800;margin:0 0 4px}
+.login-card .sub{text-align:center;font-size:13px;color:var(--text2);margin:0 0 28px}
+.login-error{background:#FCEBEB;color:#A32D2D;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}
+
+/* GENERAL */
+.app{max-width:880px;margin:0 auto;padding:0 16px;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 16px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px}.logo-mark{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#4A5D23,#5C7A2E);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;font-family:'JetBrains Mono',monospace;letter-spacing:-1px}
+.logo h1{font-size:20px;font-weight:800;letter-spacing:-.3px}.logo p{font-size:12px;color:var(--text2);margin-top:1px}
+.badge{background:#E6F1FB;color:#185FA5;font-size:11px;font-weight:600;padding:4px 12px;border-radius:16px;white-space:nowrap}
+.user-info{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.user-pill{display:flex;align-items:center;gap:6px;background:#F4F5F7;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
+.user-pill:hover{background:#EAEBEE}
+.role-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.role-dot.admin{background:#E24B4A}.role-dot.art{background:var(--pink)}.role-dot.conductor{background:var(--amber)}.role-dot.agente,.role-dot.tecnico{background:var(--blue)}
+.sync-badge{font-size:10px;font-weight:600;padding:4px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
+.sync-badge.ok{background:#EAF3DE;color:#3B6D11}.sync-badge.loading{background:#FEF7E0;color:#854F0B;animation:pulse 1.5s infinite}.sync-badge.error{background:#FCEBEB;color:#A32D2D}.sync-badge.local{background:#F4F5F7;color:#666}
+
+nav{display:flex;gap:2px;padding:12px 0;border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+.nav-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;font-family:inherit}.nav-btn:hover{background:#F0F0F0;color:#555}.nav-btn.active{background:var(--navy);color:#fff}.nav-btn svg{width:16px;height:16px;flex-shrink:0}
+main{flex:1;padding:20px 0}.section{animation:fadeIn .3s ease}
+.field{margin-bottom:14px}.field label{display:block;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+input[type="text"],input[type="date"],input[type="url"],input[type="password"],select,textarea{padding:9px 12px;border-radius:8px;border:1px solid #E4E4E4;font-size:14px;font-family:inherit;outline:none;background:#fff;width:100%;transition:border-color .15s}input:focus,select:focus,textarea:focus{border-color:var(--blue)}textarea{resize:vertical;min-height:60px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;font-family:inherit}.btn:active{transform:scale(.97)}.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:#5C7A2E}.btn-success{background:var(--green);color:#fff}.btn-danger{background:transparent;border:1px solid #F5C0D1;color:var(--pink);padding:5px 12px;font-size:11px;border-radius:6px;font-weight:500}.btn-sm{background:transparent;border:1px solid #E4E4E4;color:#555;padding:5px 12px;font-size:12px;border-radius:6px;font-weight:500}.btn-sm:hover{background:#F5F5F5}.btn-lg{padding:14px 28px;font-size:15px;border-radius:12px}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse}th{padding:10px 8px;font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.6px;text-align:center;background:#F8F8FA;border-bottom:1px solid var(--border)}th:first-child{text-align:left;min-width:180px}td{padding:9px 8px;font-size:13px;border-bottom:1px solid #F9F9F9}tr:hover{background:#FCFCFC}.td-center{text-align:center}
+.ck{width:26px;height:26px;border-radius:7px;border:2px solid #D8D8D8;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;vertical-align:middle}.ck.on{background:var(--blue);border-color:var(--blue)}.ck svg{width:14px;height:14px}.ck.disabled{opacity:.4;cursor:not-allowed}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}.driver-tag{font-size:10px;background:#FEF7E0;color:#854F0B;padding:1px 8px;border-radius:10px;font-weight:700;border:1px solid #FAC775}.task-tag{font-size:10px;background:#E6F1FB;color:#185FA5;padding:2px 8px;border-radius:8px;font-weight:600}
+.card{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden;margin-bottom:12px;transition:border-color .15s}.card:hover{border-color:#D0D0D0}.card-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#F8F8FA;border-bottom:1px solid #F3F3F3;flex-wrap:wrap}.card-body{padding:8px 16px 12px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:28px}.stat-card{background:#F4F5F7;border-radius:var(--radius);padding:14px 16px}.stat-card .label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px;display:block}.stat-card .value{font-size:26px;font-weight:800;font-family:'JetBrains Mono',monospace;display:block;margin-top:2px}.chart-box{background:#F8F8FA;border-radius:var(--radius);padding:14px;margin-bottom:8px}.section-head{font-size:13px;font-weight:700;margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px}
+
+/* Wizard styles */
+.wizard-hero{border-radius:16px;padding:28px 24px;margin-bottom:24px;color:#fff}.wizard-hero.apertura{background:linear-gradient(135deg,#185FA5,#378ADD)}.wizard-hero.cierre{background:linear-gradient(135deg,#993556,#D4537E)}.wizard-hero.trampilla_open,.wizard-hero.trampilla_close{background:linear-gradient(135deg,#854F0B,#E8A817)}.wizard-hero.info{background:linear-gradient(135deg,#4A5D23,#5C7A2E)}.wizard-hero h2{font-size:20px;font-weight:700;margin:0 0 4px}.wizard-hero p{font-size:13px;opacity:.8;margin:0}
+.wizard-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}.wizard-card{border:2px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .2s;background:var(--card);text-align:center}.wizard-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}.wizard-card .wc-icon{font-size:32px;margin-bottom:8px;display:block}.wizard-card .wc-title{font-size:15px;font-weight:700;display:block;margin-bottom:4px}.wizard-card .wc-desc{font-size:12px;color:var(--text2)}
+.progress-wrap{margin-bottom:24px}.progress-bar-bg{width:100%;height:6px;background:#E8E8E8;border-radius:3px;overflow:hidden}.progress-bar-fill{height:100%;border-radius:3px;transition:width .4s ease;background:var(--blue)}.progress-bar-fill.cierre{background:var(--pink)}.progress-bar-fill.trampilla_open,.progress-bar-fill.trampilla_close{background:var(--amber)}.progress-info{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.progress-info span{font-size:12px;color:var(--text2);font-weight:500}.progress-info strong{font-size:12px;font-family:'JetBrains Mono',monospace}
+.step-card{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:24px;margin-bottom:16px;animation:fadeIn .3s ease}.step-number{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;font-weight:800;font-size:15px;font-family:'JetBrains Mono',monospace;flex-shrink:0}.step-number.apertura{background:#E6F1FB;color:#185FA5}.step-number.cierre{background:#FBEAF0;color:#993556}.step-number.trampilla_open,.step-number.trampilla_close{background:#FEF7E0;color:#854F0B}.step-text{font-size:15px;line-height:1.65;color:#333}
+.step-substeps{margin:12px 0 0 4px;padding:10px 0 6px 16px;border-left:3px solid #E8E8E8}.step-substep{font-size:14px;color:#555;padding:4px 0;line-height:1.55}
+.step-warning{background:#FEF7E0;border:1px solid #FAC775;border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:flex-start;gap:10px}.step-warning.danger{background:#FCEBEB;border-color:#F09595}.step-warning .warn-text{font-size:13px;color:#555;line-height:1.55;white-space:pre-line}
+.step-confirm{margin-top:16px;padding:14px 16px;background:#F0FFF4;border:2px solid #C0DD97;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s;user-select:none}.step-confirm:hover{background:#E5FFE9}.step-confirm.checked{background:#E5FFE9;border-color:var(--green)}.step-confirm .confirm-box{width:26px;height:26px;border-radius:7px;border:2px solid #97C459;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}.step-confirm.checked .confirm-box{background:var(--green);border-color:var(--green);animation:checkPop .3s ease}.step-confirm .confirm-text{font-size:13px;font-weight:600;color:#3B6D11}
+.step-nav{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap}
+.step-done{text-align:center;padding:40px 20px;animation:fadeIn .4s ease}.step-done h3{font-size:20px;font-weight:700;margin:0 0 8px}.step-done p{font-size:14px;color:var(--text2)}
+.setup-box{border:2px solid var(--border);border-radius:16px;padding:28px 24px;max-width:500px;margin:0 auto;background:var(--card);animation:fadeIn .3s ease}.setup-box h3{font-size:18px;font-weight:700;margin:0 0 6px}.setup-box .sub{font-size:13px;color:var(--text2);margin:0 0 24px}
+.log-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:8px;text-transform:uppercase}.log-badge.apertura{background:#E6F1FB;color:#185FA5}.log-badge.cierre{background:#FBEAF0;color:#993556}.log-badge.trampilla_open,.log-badge.trampilla_close{background:#FEF7E0;color:#854F0B}
+.gen-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;background:#EAF3DE;color:#3B6D11}
+
+/* User management */
+.user-card{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px;background:var(--card);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.role-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:8px;text-transform:uppercase}
+.role-badge.admin{background:#FCEBEB;color:#A32D2D}.role-badge.art{background:#FBEAF0;color:#993556}.role-badge.conductor{background:#FEF7E0;color:#854F0B}.role-badge.agente{background:#E6F1FB;color:#185FA5}.role-badge.tecnico{background:#E6F1FB;color:#185FA5}
+
+.pdf-card{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;gap:10px;flex-wrap:wrap;background:var(--card)}.pdf-icon{width:42px;height:42px;border-radius:8px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}.video-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--card)}.video-thumb{background:linear-gradient(135deg,#4A5D23,#3D3D5C);height:130px;display:flex;align-items:center;justify-content:center;cursor:pointer}.video-thumb:hover{background:linear-gradient(135deg,#5C7A2E,#4D4D6C)}.video-body{padding:12px 14px}
+.person-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;gap:10px;flex-wrap:wrap;background:var(--card);transition:border-color .15s}.person-row:hover{border-color:#D0D0D0}.mini-stat{font-size:12px;color:#999}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:998;padding:16px}.modal{background:#fff;border-radius:16px;padding:24px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.15);animation:fadeIn .2s ease;max-height:90vh;overflow-y:auto}.modal h3{font-size:17px;font-weight:700;margin-bottom:16px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;box-shadow:0 8px 30px rgba(0,0,0,.15);animation:slideDown .3s ease;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:14px}
+footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:16px}
+.no-access{text-align:center;padding:60px 20px;color:var(--text2)}.no-access h3{font-size:18px;margin:0 0 8px;color:var(--navy)}
+.prio-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;text-transform:uppercase}
+.prio-badge.alta{background:#FCEBEB;color:#A32D2D}.prio-badge.media{background:#FEF7E0;color:#854F0B}.prio-badge.baja{background:#EAF3DE;color:#3B6D11}
+.status-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:8px;text-transform:uppercase}
+.status-badge.pendiente{background:#FCEBEB;color:#A32D2D}.status-badge.en_curso{background:#FEF7E0;color:#854F0B}.status-badge.completada{background:#EAF3DE;color:#3B6D11}
+.status-badge.abierta{background:#FCEBEB;color:#A32D2D}.status-badge.resuelta{background:#EAF3DE;color:#3B6D11}
+.status-badge.en_ruta{background:#FEF7E0;color:#854F0B}.status-badge.finalizada{background:#EAF3DE;color:#3B6D11}
+.cat-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px;background:#EEEDFE;color:#3C3489}
+.comment-box{border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px;background:#FAFBFC}
+.comment-item{padding:8px 0;border-bottom:1px solid #F3F3F3;font-size:13px}.comment-item:last-child{border:none}
+.comment-author{font-weight:600;font-size:12px;color:var(--navy)}.comment-date{font-size:11px;color:#999;margin-left:8px}
+.photo-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.photo-thumb{width:60px;height:60px;border-radius:8px;object-fit:cover;border:1px solid var(--border);cursor:pointer}
+.task-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;margin-bottom:10px;transition:border-color .15s;cursor:pointer}.task-card:hover{border-color:#CCC}
+.task-card .tc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.task-card .tc-title{font-weight:600;font-size:14px;flex:1;min-width:0}.task-card .tc-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:#999;margin-top:4px}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s}.filter-chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.diff-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;text-transform:uppercase}
+.diff-badge.facil{background:#EAF3DE;color:#3B6D11}.diff-badge.media{background:#FEF7E0;color:#854F0B}.diff-badge.dificil{background:#FCEBEB;color:#A32D2D}
+.route-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:18px;margin-bottom:10px;transition:border-color .15s}.route-card:hover{border-color:#CCC}
+.route-stat{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#888;margin-right:12px}
+.folder-tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s;white-space:nowrap}.folder-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.search-box{position:relative;margin-bottom:16px}.search-box input{padding-left:36px}.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none}
+.manual-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;gap:10px;flex-wrap:wrap;background:var(--card);transition:border-color .15s}.manual-item:hover{border-color:#CCC}
+.completion-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.completion-chip{font-size:11px;padding:2px 8px;border-radius:6px;background:#E6F1FB;color:#185FA5;font-weight:500}
+.faq-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;margin-bottom:10px;transition:border-color .15s}.faq-card:hover{border-color:#CCC}
+.faq-q{font-size:15px;font-weight:600;margin:0 0 6px;color:#333}.faq-a{font-size:14px;color:#555;line-height:1.6;margin:0}
+.faq-pending{border-left:3px solid var(--amber)}
+.chat-container{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:400px;max-height:700px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 0;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:85%;padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.55;word-wrap:break-word}
+.chat-msg.user{background:var(--navy);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg.ai{background:#F4F5F7;color:#333;align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.ai .ai-label{font-size:11px;font-weight:700;color:#999;margin-bottom:4px;text-transform:uppercase}
+.chat-msg.typing{animation:pulse 1.5s infinite}
+.chat-input-bar{display:flex;gap:8px;padding:12px 0;border-top:1px solid var(--border)}
+.chat-input-bar input{flex:1}
+.chat-config{padding:16px;background:#F8F8FA;border-radius:10px;margin-bottom:16px;font-size:13px;color:#666}
+.salida-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;margin-bottom:10px;transition:border-color .15s;cursor:pointer}.salida-card:hover{border-color:#CCC}
+.salida-card.en_ruta{border-left:4px solid var(--amber)}.salida-card.finalizada{border-left:4px solid var(--green)}
+.km-badge{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--navy);background:#F4F5F7;padding:2px 8px;border-radius:6px}
+.fuel-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:8px;background:#E1F5EE;color:#0F6E56}
+
+@media(max-width:600px){.hide-mobile{display:none!important}.stats-grid{grid-template-columns:repeat(2,1fr)}.video-grid{grid-template-columns:1fr}.wizard-selector{grid-template-columns:1fr}th:first-child{min-width:140px!important}.modal{padding:20px;border-radius:12px}header{padding:16px 0 12px}.logo h1{font-size:17px}.step-card{padding:18px 16px}.setup-box{padding:20px 16px}.login-card{padding:28px 20px}}
+</style>
+</head>
+<body>
+<div class="app" id="app"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:80vh"><div style="width:36px;height:36px;border:3px solid #E6F1FB;border-top:3px solid #378ADD;border-radius:50%;animation:spin .8s linear infinite"></div><p style="color:#8A8A8A;margin-top:16px;font-size:14px">Cargando BASE LITORAL | BRAVO3...</p></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIGURACION
+// ══════════════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbwGKAreb_VIb0rwQINp0RzOrXHnSMEwknh5wmDhgXPIugW2LIBT5fYl8v8fOEfXJUaMHg/exec';
+// ══════════════════════════════════════════════════════════════
+
+// ── API (JSONP para GET, iframe para POST — evita CORS) ──
+function apiOk(){return API_URL&&API_URL!=='PEGAR_AQUI_TU_URL'&&API_URL.startsWith('https://')}
+let syncSt='loading';
+
+function apiGet(params){
+  return new Promise((resolve,reject)=>{
+    const cb='_gcb'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+    const timeout=setTimeout(()=>{delete window[cb];reject(new Error('Timeout'))},15000);
+    window[cb]=function(data){clearTimeout(timeout);delete window[cb];resolve(data)};
+    const url=API_URL+'?callback='+cb+(params?'&'+new URLSearchParams(params):'');
+    const s=document.createElement('script');
+    s.src=url;s.onerror=()=>{clearTimeout(timeout);delete window[cb];reject(new Error('Error de red'))};
+    document.head.appendChild(s);s.onload=()=>s.remove();
+  });
+}
+
+function apiPost(payload){
+  return new Promise((resolve,reject)=>{
+    const id='_pf'+Date.now();
+    const iframe=document.createElement('iframe');
+    iframe.name=id;iframe.style.display='none';document.body.appendChild(iframe);
+    const form=document.createElement('form');
+    form.method='POST';form.action=API_URL;form.target=id;form.style.display='none';
+    const input=document.createElement('input');
+    input.type='hidden';input.name='payload';input.value=JSON.stringify(payload);
+    form.appendChild(input);document.body.appendChild(form);
+    const needsResponse=['login','getData','changePassword'].includes(payload.action);
+    let responded=false;
+    function onMsg(e){if(responded)return;try{const data=typeof e.data==='string'?JSON.parse(e.data):e.data;if(data&&(data.success!==undefined||data.error!==undefined||data.personnel||data.user)){responded=true;window.removeEventListener('message',onMsg);clearTimeout(timer);cleanup();resolve(data)}}catch(ex){}}
+    window.addEventListener('message',onMsg);
+    iframe.onload=function(){if(responded)return;try{const doc=iframe.contentDocument||iframe.contentWindow.document;const text=doc.body?doc.body.textContent||doc.body.innerText:'';if(text&&text.trim().startsWith('{')){responded=true;window.removeEventListener('message',onMsg);clearTimeout(timer);cleanup();try{resolve(JSON.parse(text.trim()))}catch(ex){resolve({success:true})}return}}catch(ex){}if(!needsResponse&&!responded){responded=true;window.removeEventListener('message',onMsg);clearTimeout(timer);cleanup();resolve({success:true})}};
+    const timer=setTimeout(()=>{if(!responded){responded=true;window.removeEventListener('message',onMsg);cleanup();if(needsResponse)reject(new Error('Timeout esperando respuesta'));else resolve({success:true})}},12000);
+    function cleanup(){setTimeout(()=>{try{iframe.remove();form.remove()}catch(e){}},1000)}
+    form.submit();
+  });
+}
+
+function setSS(s){syncSt=s;const el=document.getElementById('sync-ind');if(el){const l={ok:'Sincronizado',loading:'Sincronizando...',error:'Sin conexión',local:'Solo local'};el.className='sync-badge '+(s||'local');el.textContent=l[s]||s}}
+
+// ── ROLES Y PERMISOS ──
+const ROLES={admin:{label:'Administrador',color:'#E24B4A'},art:{label:'ART',color:'#D4537E'},conductor:{label:'Conductor',color:'#E8A817'},agente:{label:'Agente',color:'#378ADD'},tecnico:{label:'Técnico',color:'#378ADD'}};
+function can(action){
+  if(!currentUser)return false;
+  const r=currentUser.rol;
+  const perms={
+    editRecords:['admin','art'],editGuides:['admin','art'],
+    createTasks:['admin','art'],editTasks:['admin','art'],
+    createIncidents:['admin','art','conductor'],editIncidents:['admin','art'],
+    createSalidas:['admin','art','conductor'],editSalidas:['admin','art'],
+    manageRoutes:['admin','art'],registerRoutes:['admin','art','conductor'],viewRoutes:['admin','art','conductor'],
+    uploadManuals:['admin','art'],manageFolders:['admin','art'],
+    proposeFAQ:['admin','art','conductor','agente','tecnico'],approveFAQ:['admin'],
+    manageUsers:['admin','art'],manageVideos:['admin','art'],managePersonnel:['admin','art'],
+    useChat:['admin','art','conductor','agente','tecnico']
+  };
+  return perms[action]?.includes(r)||false;
+}
+
+// ── DATOS ──
+const GROUPS={tecnicos:{label:"Técnicos",color:"#E8A817"},artcoor:{label:"ART y COOR",color:"#D4537E"},agentes:{label:"Agentes",color:"#378ADD"}};
+const TASKS_DEF=[{key:"despliegue",label:"Despliegue / Repliegue",short:"Despl."},{key:"uso",label:"Uso y funcionamiento",short:"Uso"},{key:"conduccion",label:"Conducción",short:"Cond.",driverOnly:true}];
+const GENERATORS=["Grupo electrógeno 1","Grupo electrógeno 2","Conexión exterior (red eléctrica)","Baterías del vehículo"];
+const GUIDE_LABELS={apertura:"Apertura",cierre:"Cierre",trampilla_open:"Trampilla (apert.)",trampilla_close:"Trampilla (cierre)"};
+
+const GUIDE_APERTURA=[{text:"Ubicar el vehículo. Calderines de aire llenos. Motor apagado.",warn:"Motor APAGADO durante nivelación.",confirm:"Vehículo ubicado y calderines verificados"},{text:"Habilitar potencia eléctrica en Patch Panel.",confirm:"Potencia habilitada"},{text:"Encender autómata en bodega trasera derecha. Subir magnetotérmicos «PANTALLA-AUTÓMATA».",confirm:"Autómata encendido"},{text:"Pulsar logo «ITURRI». Seleccionar modo automático o mando.",sub:["Automático: «Apertura Automática» → «Nivelación Automática».","Manual: mando inalámbrico."]},{text:"Nivelación según indicaciones del autómata.",warn:"Colocar calzos. Revisar niveles visuales al terminar.",confirm:"Nivelación completada"},{text:"Acceder al interior por puerta delantera con escalera desplegada."},{text:"Activar protecciones del cuadro eléctrico."},{text:"Quitar pasador de puerta delantera de cristal."},{text:"Sacar petacas desde zona de entrada.",sub:["Automático: botón del cuadro. Seta de emergencia si incidencia.","Manual: compensar ambas petacas."],warn_danger:"Mano junto a seta de emergencia. NADA en la trayectoria.",confirm:"Petacas desplegadas"},{text:"Levantar mesa abatible. Nivelar suelo.",sub:["Automático: botón negro.","Manual: elevar y bajar piso."],warn_danger:"Petacas al máximo y tablero ARRIBA para mover piso.",confirm:"Piso nivelado"},{text:"Bajar mesa plegable. Ajustar petacas al borde.",confirm:"Petacas ajustadas"},{text:"Preparar interior: cintas sillas, pulpo, barra transversal."},{text:"Sacar 6 barandillas bajo mesa de reuniones.",warn:"NO golpear puertas de cristal."},{text:"Montar 2 puntales del portón trasero."},{text:"Desplegar portón superior."},{text:"Sacar escalera trasera. Abatir chapa del piso.",sub:["Montar escalera en casquillos."]},{text:"Montar 6 barandillas: 2 delantera, 4 trasera."},{text:"Barra transversal en rincón con correas."},{text:"Quitar pasador puertas traseras."},{text:"Desplegar altavoces si necesario."},{text:"Encender SAI para RACK.",confirm:"SAI encendido — Apertura completada"}];
+
+const GUIDE_CIERRE=[{text:"Puertas automáticas en «Siempre abierta» con topes."},{text:"Barra transversal junto al microondas."},{text:"Plegar altavoces traseros."},{text:"Recoger trampilla si desplegada."},{text:"Desmontar 6 barandillas.",warn:"NO golpear puertas de cristal."},{text:"Desmontar escalera trasera sobre portón."},{text:"Abatir chapa del piso en vertical."},{text:"Cerrar portón superior con escalera."},{text:"Cerrar portón trasero con llave.",confirm:"Portón cerrado"},{text:"Puntales al interior con correas."},{text:"Barandillas, barra y pulpo montados."},{text:"Pasador en puertas traseras."},{text:"Sillas en posición de transporte.",sub:["2+2 con ruedas invertidas.","8 con patas apiladas."],confirm:"Sillas aseguradas"},{text:"Abrir petacas ligeramente para liberar presión.",confirm:"Presión liberada"},{text:"Mesa plegable en horizontal."},{text:"Desnivelar piso.",warn_danger:"Petacas al máximo. NADA en trayectoria del piso.",confirm:"Piso desnivelado"},{text:"Mesa plegable en vertical."},{text:"Cerrar petacas.",warn_danger:"PASO CRÍTICO: verificar piso bajado, nada en trayectoria, interior despejado.",confirm:"Todo verificado — procedo"},{text:"Puerta del aseo cerrada."},{text:"Apagar SAI."},{text:"Apagar cuadro eléctrico."},{text:"Pasador puerta delantera."},{text:"Recoger escalera delantera."},{text:"Arrancar camión.",warn:"Motor ENCENDIDO obligatorio para patas.",confirm:"Motor arrancado"},{text:"Recoger patas progresivamente.",confirm:"Patas recogidas"},{text:"Guardar calzos. Apagar autómata.",confirm:"Cierre completado"}];
+
+const GUIDE_TRAMPILLA_OPEN=[{text:"Camión arrancado o conectado.",warn:"No maniobrar con baterías bajas."},{text:"Abrir puertezuelas."},{text:"Dar corriente en bodega izquierda.",confirm:"Corriente activada"},{text:"Pulsar SUBIR."},{text:"Abatir chapa del piso."},{text:"Pulsar BAJAR."},{text:"Desplegar barandillas amarillas."},{text:"Pulsar BAJAR (rampa)."},{text:"Subir y pulsar SUBIR.",confirm:"Trampilla operativa"}];
+const GUIDE_TRAMPILLA_CLOSE=[{text:"Camión arrancado o conectado."},{text:"Dar corriente si apagada."},{text:"Pulsar BAJAR."},{text:"Plegar barandillas."},{text:"Pulsar SUBIR (parar encima)."},{text:"Abatir chapa."},{text:"Pulsar BAJAR."},{text:"Cerrar puertezuela."},{text:"Apagar equipo.",confirm:"Trampilla cerrada"}];
+const CONSIDERACIONES=["Magnetotérmico «HIDRÁULICA» siempre subido.","Nivelación: motor APAGADO, calderines llenos.","Recogida patas: motor ENCENDIDO.","Cerrar: recoger escalera → petacas → escalera/trampilla → patas.","No desplegar escaleras hasta nivelación completa.","Patas en movimiento: escaleras recogidas.","Tabique NO recogido → NO hay movimiento.","Tablero ARRIBA → NO se mueven petacas.","Petacas NO abiertas al máximo → NO se mueve piso."];
+
+// ── ESTADO ──
+let currentUser=null;
+let ST={personnel:[],records:{},videos:[],guideLogs:[],users:[],pdfs:[],tasks:[],taskComments:[],incidents:[],incidentComments:[],incidentPhotos:[],routes:[],routeLogs:[],folders:[],manuals:[],faqs:[],salidas:[],repostajes:[],tab:"guia",selDate:new Date().toISOString().slice(0,10),selGroup:"all",guideMode:null,guideStep:-1,guideConfirmed:{},guideResponsible:"",guideGenerator:"",modal:null,formData:{}};
+
+// ── CARGA ──
+async function loadData(){
+  if(!apiOk()){setSS('local');loadLocal();render();return}
+  try{setSS('loading');const d=await apiGet();if(d.error)throw new Error(d.error);
+    ST.personnel=d.personnel||[];ST.records=d.records||{};ST.guideLogs=d.guideLogs||[];ST.videos=d.videos||[];ST.users=d.users||[];
+    ST.tasks=d.tasks||[];ST.taskComments=d.taskComments||[];ST.incidents=d.incidents||[];ST.incidentComments=d.incidentComments||[];ST.incidentPhotos=d.incidentPhotos||[];
+    ST.routes=d.routes||[];ST.routeLogs=d.routeLogs||[];ST.folders=d.folders||[];ST.manuals=d.manuals||[];ST.faqs=d.faqs||[];
+    ST.salidas=d.salidas||[];ST.repostajes=d.repostajes||[];
+    try{const lp=localStorage.getItem('pma3_pdfs');if(lp)ST.pdfs=JSON.parse(lp)}catch(e){}
+    cacheLocal();setSS('ok');render();
+  }catch(e){console.warn('API error:',e);setSS('error');loadLocal();render()}
+}
+function loadLocal(){try{const r=localStorage.getItem('pma_bravo3_v2');if(r){const d=JSON.parse(r);Object.keys(d).forEach(k=>{if(ST.hasOwnProperty(k))ST[k]=d[k]})}}catch(e){}}
+function cacheLocal(){try{const save={...ST};delete save.pdfs;localStorage.setItem('pma_bravo3_v2',JSON.stringify(save))}catch(e){}}
+
+// ── CLOUD OPS ──
+async function cloud(action,data){if(!apiOk())return;setSS('loading');try{await apiPost({action,...data});setSS('ok')}catch(e){setSS('error')}}
+
+// ── UTILS ──
+function fmtDate(d){if(!d)return'';const[y,m,day]=d.split("-");return day+"/"+m+"/"+y}
+function fmtDT(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}
+function esc(s){const d=document.createElement("div");d.textContent=s||'';return d.innerHTML}
+function isLocal(u){return u&&(u.endsWith('.mp4')||u.endsWith('.webm')||u.includes('/videos/'))}
+let tt=null;function toast(msg){clearTimeout(tt);let t=document.getElementById("toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t)}t.textContent=msg;t.style.display="block";tt=setTimeout(()=>t.style.display="none",2500)}
+function getStats(){const s={};ST.personnel.forEach(p=>s[p.id]={name:p.name,group:p.group,despliegue:0,uso:0,conduccion:0});Object.values(ST.records).forEach(day=>Object.entries(day).forEach(([pid,tasks])=>{if(!s[pid])return;TASKS_DEF.forEach(t=>{if(tasks[t.key])s[pid][t.key]++})}));return s}
+
+// ═══════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════
+function renderLogin(){
+  document.getElementById('app').innerHTML=`
+  <div class="login-page">
+    <div class="login-card">
+      <div class="logo-big">B3</div>
+      <h1>BASE LITORAL | BRAVO3</h1>
+      <p class="sub">Puesto de mando avanzado — Base Litoral</p>
+      <div class="login-error" id="login-error"></div>
+      <div class="field"><label>Usuario</label><input type="text" id="login-user" placeholder="Nombre de usuario" autocomplete="username"></div>
+      <div class="field"><label>Contraseña</label><input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;padding:12px" onclick="doLogin()">Acceder</button>
+      <p style="text-align:center;font-size:11px;color:var(--text3);margin-top:16px">Los datos se sincronizan con Google Sheets</p>
+    </div>
+  </div>`;
+}
+
+async function doLogin(){
+  const user=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-error');
+  if(!user||!pass){errEl.textContent='Introduce usuario y contraseña';errEl.style.display='block';return}
+  if(!apiOk()){errEl.textContent='API no configurada';errEl.style.display='block';return}
+  try{
+    errEl.style.display='none';
+    const res=await apiGet({action:'login',user:user,pass:pass});
+    if(res.error){errEl.textContent=res.error;errEl.style.display='block';return}
+    currentUser=res.user;
+    localStorage.setItem('pma3_session',JSON.stringify(currentUser));
+    await loadData();
+  }catch(e){errEl.textContent='Error de conexión: '+e.message;errEl.style.display='block'}
+}
+
+function doLogout(){
+  currentUser=null;
+  localStorage.removeItem('pma3_session');
+  renderLogin();
+}
+
+// ═══════════════════════════════════════
+// RENDER PRINCIPAL
+// ═══════════════════════════════════════
+function render(){
+  if(!currentUser){renderLogin();return}
+  const app=document.getElementById('app');
+  const r=currentUser.rol;
+  const allTabs=[
+    {key:"guia",label:"Guía",icon:'<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"tareas",label:"Tareas",icon:'<path d="M16 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V8z"/><polyline points="16 3 16 9 21 9"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"incidencias",label:"Incidencias",icon:'<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"registro",label:"Registro",icon:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"salidas",label:"Salidas",icon:'<path d="M5 17H4a2 2 0 01-2-2V5a2 2 0 012-2h16a2 2 0 012 2v10a2 2 0 01-2 2h-1"/><polygon points="12 15 17 21 7 21 12 15"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"rutas",label:"Rutas",icon:'<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/><path d="M2 12h20"/>',roles:['admin','art','conductor']},
+    {key:"manuales",label:"Manuales",icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"faqs",label:"FAQs",icon:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"chat",label:"Chat IA",icon:'<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"videos",label:"Vídeos",icon:'<polygon points="5 3 19 12 5 21 5 3"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"historial",label:"Historial",icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"estadisticas",label:"Estadísticas",icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"personal",label:"Personal",icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"usuarios",label:"Usuarios",icon:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',roles:['admin','art']},
+  ];
+  const tabs=allTabs.filter(t=>t.roles.includes(r));
+  if(!tabs.find(t=>t.key===ST.tab))ST.tab=tabs[0]?.key||'registro';
+
+  const rolLabel=ROLES[r]?.label||r;
+  let h=`<header><div class="logo"><div class="logo-mark">B3</div><div><h1>BASE LITORAL | BRAVO3</h1><p>Puesto de mando avanzado — Base Litoral</p></div></div>
+    <div class="user-info"><span id="sync-ind" class="sync-badge ${syncSt}">${{ok:'Sincronizado',loading:'Sincronizando...',error:'Sin conexión',local:'Solo local'}[syncSt]||''}</span>
+    <span class="user-pill" onclick="ST.modal='userMenu';render()"><span class="role-dot ${r}"></span>${esc(currentUser.name)}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div></header>`;
+  h+=`<nav>${tabs.map(t=>`<button class="nav-btn ${ST.tab===t.key?'active':''}" onclick="switchTab('${t.key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg><span>${t.label}</span></button>`).join('')}</nav><main>`;
+
+  const renderers={registro:rReg,historial:rHis,estadisticas:rSta,guia:rGui,manuales:rMan,videos:rVid,personal:rPer,usuarios:rUsr,tareas:rTar,incidencias:rInc,rutas:rRut,faqs:rFaq,chat:rChat,salidas:rSal};
+  h+=(renderers[ST.tab]||rReg)();
+  h+='</main><footer>BASE LITORAL | BRAVO3 · '+esc(rolLabel)+' · Datos sincronizados con Google Sheets</footer>';
+  if(ST.modal)h+=rMod();
+  app.innerHTML=h;
+  if(ST.tab==='estadisticas')setTimeout(rCh,50);
+}
+
+// ═══════════ TAB: REGISTRO ═══════════
+function rReg(){const fl=ST.selGroup==="all"?ST.personnel:ST.personnel.filter(p=>p.group===ST.selGroup);const dr=ST.records[ST.selDate]||{};const editable=can('editRecords');let h='<div class="section"><div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap"><div class="field" style="margin:0"><label>Fecha</label><input type="date" value="'+ST.selDate+'" onchange="ST.selDate=this.value;render()" style="width:170px"></div><div class="field" style="margin:0"><label>Grupo</label><select onchange="ST.selGroup=this.value;render()" style="width:160px"><option value="all" '+(ST.selGroup==="all"?"selected":"")+'>Todos</option>'+Object.entries(GROUPS).map(([k,v])=>'<option value="'+k+'" '+(ST.selGroup===k?"selected":"")+'>'+v.label+'</option>').join('')+'</select></div></div>';
+  if(!fl.length){h+='<div class="empty">No hay personal.</div>'}else{h+='<div class="table-wrap"><table><thead><tr><th style="text-align:left">Efectivo</th>';TASKS_DEF.forEach(t=>{h+='<th>'+t.short+'</th>'});h+='</tr></thead><tbody>';fl.forEach(p=>{const pr=dr[p.id]||{};h+='<tr><td><div style="display:flex;align-items:center;gap:8px"><span class="dot" style="background:'+(GROUPS[p.group]?.color||'#999')+'"></span><span style="font-weight:500">'+esc(p.name)+'</span>'+(p.driver?'<span class="driver-tag">C</span>':'')+'</div></td>';TASKS_DEF.forEach(t=>{if(t.driverOnly&&!p.driver){h+='<td class="td-center" style="color:#DDD">—</td>'}else{const c=pr[t.key];h+='<td class="td-center"><span class="ck '+(c?'on':'')+' '+(editable?'':'disabled')+'" '+(editable?'onclick="toggleCheck(\''+p.id+'\',\''+t.key+'\')"':'')+'>'+( c?'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':'')+'</span></td>'}});h+='</tr>'});h+='</tbody></table></div>'}
+  if(editable)h+='<button class="btn btn-primary" onclick="saveDay()" style="margin-top:16px">Guardar registro del día</button>';
+  h+='</div>';return h}
+
+// ═══════════ TAB: HISTORIAL ═══════════
+function rHis(){const ds=Object.keys(ST.records).sort().reverse().filter(d=>{const day=ST.records[d];return Object.entries(day).some(([,t])=>TASKS_DEF.some(tk=>t[tk.key]))});if(!ds.length)return'<div class="section"><div class="empty">No hay registros.</div></div>';let h='<div class="section">';ds.forEach(date=>{const day=ST.records[date];const en=Object.entries(day).filter(([,t])=>TASKS_DEF.some(tk=>t[tk.key]));h+='<div class="card"><div class="card-header"><span style="font-weight:700;font-size:14px;font-family:\'JetBrains Mono\',monospace">'+fmtDate(date)+'</span><span style="font-size:11px;color:#999;flex:1">'+en.length+' reg.</span>'+(can('editRecords')?'<button class="btn-danger" onclick="deleteDay(\''+date+'\')">Eliminar</button>':'')+'</div><div class="card-body">';en.forEach(([pid,tasks])=>{const p=ST.personnel.find(x=>x.id===pid);h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #FAFAFA;gap:8px;flex-wrap:wrap"><span style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;flex:1;min-width:0"><span class="dot" style="background:'+(GROUPS[p?.group]?.color||'#ccc')+'"></span>'+esc(p?.name||pid)+'</span><div style="display:flex;gap:4px">'+TASKS_DEF.map(t=>tasks[t.key]?'<span class="task-tag">'+t.short+'</span>':'').join('')+'</div></div>'});h+='</div></div>'});h+='</div>';return h}
+
+// ═══════════ TAB: ESTADÍSTICAS ═══════════
+function rSta(){const stats=getStats();const ds=Object.keys(ST.records);const tot=Object.values(stats).reduce((a,s)=>a+s.despliegue+s.uso+s.conduccion,0);
+  const tasksPend=ST.tasks.filter(t=>t.status==='pendiente').length;const tasksDone=ST.tasks.filter(t=>t.status==='completada').length;
+  const incOpen=ST.incidents.filter(i=>i.status==='abierta').length;const incResolved=ST.incidents.filter(i=>i.status==='resuelta').length;
+  const totalKm=ST.salidas.filter(s=>s.kmFin>0&&s.kmInicio>0).reduce((a,s)=>a+(s.kmFin-s.kmInicio),0);
+  const totalLitros=ST.repostajes.reduce((a,r)=>a+r.litros,0);
+  const consumoMedio=totalKm>0&&totalLitros>0?Math.round((totalLitros/totalKm)*100*10)/10:0;
+  let h='<div class="section"><div class="stats-grid">';
+  h+='<div class="stat-card"><span class="label">Días registrados</span><span class="value">'+ds.length+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Operaciones</span><span class="value">'+tot+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Procedimientos</span><span class="value">'+ST.guideLogs.length+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Efectivos</span><span class="value">'+ST.personnel.length+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Tareas pend.</span><span class="value" style="color:#E24B4A">'+tasksPend+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Tareas completadas</span><span class="value" style="color:#1D9E75">'+tasksDone+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Incidencias abiertas</span><span class="value" style="color:#E24B4A">'+incOpen+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Incidencias resueltas</span><span class="value" style="color:#1D9E75">'+incResolved+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Km totales</span><span class="value">'+totalKm.toLocaleString('es-ES')+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Litros repostados</span><span class="value">'+totalLitros.toLocaleString('es-ES')+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Consumo medio</span><span class="value">'+(consumoMedio?consumoMedio+' L/100km':'—')+'</span></div>';
+  h+='<div class="stat-card"><span class="label">Salidas</span><span class="value">'+ST.salidas.length+'</span></div>';
+  h+='</div>';
+  if(tot>0){h+='<h3 class="section-head">Actividad por persona</h3><div class="chart-box"><canvas id="chart-bar" height="300"></canvas></div><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:24px"><div style="flex:1;min-width:220px"><h3 class="section-head">Por tarea</h3><div class="chart-box"><canvas id="chart-pie-task" height="220"></canvas></div></div><div style="flex:1;min-width:220px"><h3 class="section-head">Por grupo</h3><div class="chart-box"><canvas id="chart-pie-group" height="220"></canvas></div></div></div>'}
+  // Incidencias por categoría
+  if(ST.incidents.length>0){h+='<h3 class="section-head" style="margin-top:24px">Incidencias por categoría</h3><div class="chart-box"><canvas id="chart-inc-cat" height="220"></canvas></div>'}
+  if(!tot&&!ST.incidents.length)h+='<div class="empty">Guarda registros para ver estadísticas.</div>';
+  h+='</div>';return h}
+function rCh(){
+  var stats=getStats();
+  var data=Object.values(stats).map(function(s){return Object.assign({},s,{total:s.despliegue+s.uso+s.conduccion})}).filter(function(s){return s.total>0}).sort(function(a,b){return b.total-a.total});
+  if(!data.length){_ric();return}
+  var bE=document.getElementById("chart-bar");
+  if(bE){new Chart(bE,{type:"bar",data:{labels:data.map(function(d){return d.name.length>18?d.name.slice(0,16)+"...":d.name}),datasets:[{label:"Despliegue",data:data.map(function(d){return d.despliegue}),backgroundColor:"#378ADD",borderRadius:3},{label:"Uso",data:data.map(function(d){return d.uso}),backgroundColor:"#D4537E",borderRadius:3},{label:"Conduccion",data:data.map(function(d){return d.conduccion}),backgroundColor:"#E8A817",borderRadius:3}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{font:{family:"DM Sans",size:11},boxWidth:12}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{display:false},ticks:{font:{family:"DM Sans",size:10}}}}}});bE.parentElement.style.height=Math.max(280,data.length*30)+"px"}
+  var pE=document.getElementById("chart-pie-task");
+  if(pE){var d=0,u=0,c=0;Object.values(stats).forEach(function(s){d+=s.despliegue;u+=s.uso;c+=s.conduccion});new Chart(pE,{type:"doughnut",data:{labels:["Despliegue","Uso","Conduccion"],datasets:[{data:[d,u,c],backgroundColor:["#378ADD","#D4537E","#E8A817"],borderWidth:2,borderColor:"#F8F8FA"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"55%",plugins:{legend:{position:"bottom",labels:{font:{family:"DM Sans",size:11},boxWidth:12}}}}})}
+  var gE=document.getElementById("chart-pie-group");
+  if(gE){var gt={};Object.values(stats).forEach(function(s){if(!gt[s.group])gt[s.group]=0;gt[s.group]+=s.despliegue+s.uso+s.conduccion});var gD=Object.entries(gt).filter(function(e){return e[1]>0});new Chart(gE,{type:"doughnut",data:{labels:gD.map(function(e){return GROUPS[e[0]]?GROUPS[e[0]].label:e[0]}),datasets:[{data:gD.map(function(e){return e[1]}),backgroundColor:gD.map(function(e){return GROUPS[e[0]]?GROUPS[e[0]].color:"#999"}),borderWidth:2,borderColor:"#F8F8FA"}]},options:{responsive:true,maintainAspectRatio:false,cutout:"55%",plugins:{legend:{position:"bottom",labels:{font:{family:"DM Sans",size:11},boxWidth:12}}}}})}
+  _ric();
+}
+function _ric(){
+  var icE=document.getElementById("chart-inc-cat");if(!icE)return;
+  var cats={};ST.incidents.forEach(function(i){if(!cats[i.category])cats[i.category]=0;cats[i.category]++});
+  var cD=Object.entries(cats).filter(function(e){return e[1]>0});
+  if(cD.length){new Chart(icE,{type:"bar",data:{labels:cD.map(function(e){return e[0]}),datasets:[{label:"Incidencias",data:cD.map(function(e){return e[1]}),backgroundColor:["#378ADD","#E8A817","#D4537E","#7F77DD","#1D9E75"],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{stepSize:1},grid:{color:"#F0F0F0"}},x:{grid:{display:false}}}}})}
+}
+
+
+// ═══════════ TAB: GUÍA (reusa la existente con permisos) ═══════════
+function rGui(){if(!ST.guideMode)return rGSel();if(ST.guideMode==='info')return rGInfo();if(ST.guideMode==='log')return rGLog();if(ST.guideStep===-1)return rGSetup();const guides={apertura:GUIDE_APERTURA,cierre:GUIDE_CIERRE,trampilla_open:GUIDE_TRAMPILLA_OPEN,trampilla_close:GUIDE_TRAMPILLA_CLOSE};const titles={apertura:"Apertura",cierre:"Cierre",trampilla_open:"Trampilla (apert.)",trampilla_close:"Trampilla (cierre)"};const steps=guides[ST.guideMode];const step=ST.guideStep;const total=steps.length;const cur=steps[step];const pct=Math.round((step/total)*100);const nc=!!cur?.confirm;const ic=!!ST.guideConfirmed[ST.guideMode+'_'+step];const ca=!nc||ic;const done=step>=total;const rn=ST.personnel.find(p=>p.id===ST.guideResponsible)?.name||'—';
+  let h='<div class="section"><div class="wizard-hero '+ST.guideMode+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px"><div><h2>'+titles[ST.guideMode]+'</h2><p>Responsable: <strong>'+esc(rn)+'</strong> · Generador: <strong>'+esc(ST.guideGenerator)+'</strong></p></div><button onclick="cancelGuide()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Cancelar</button></div></div>';
+  h+='<div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill '+ST.guideMode+'" style="width:'+(done?100:pct)+'%"></div></div><div class="progress-info"><span>Paso '+(done?total:step+1)+' de '+total+'</span><strong>'+(done?100:pct)+'%</strong></div></div>';
+  if(done){h+='<div class="step-done"><span style="font-size:48px;display:block;margin-bottom:12px">✅</span><h3>Procedimiento completado</h3><p>Responsable: <strong>'+esc(rn)+'</strong> · Generador: <strong>'+esc(ST.guideGenerator)+'</strong></p><div class="field" style="max-width:400px;margin:20px auto 0;text-align:left"><label>Observaciones</label><textarea id="guide-notes" rows="3" placeholder="Incidencias, comentarios..."></textarea></div><button class="btn btn-success btn-lg" onclick="finishGuide()" style="margin-top:16px">Registrar ✓</button></div>'}
+  else{h+='<div class="step-card"><div style="display:flex;align-items:flex-start;gap:14px"><span class="step-number '+ST.guideMode+'">'+(step+1)+'</span><div style="flex:1"><p class="step-text">'+esc(cur.text)+'</p>';if(cur.sub){h+='<div class="step-substeps">';cur.sub.forEach(s=>{h+='<div class="step-substep">• '+esc(s)+'</div>'});h+='</div>'}if(cur.warn)h+='<div class="step-warning"><span style="font-size:18px;flex-shrink:0">⚠️</span><span class="warn-text">'+esc(cur.warn)+'</span></div>';if(cur.warn_danger)h+='<div class="step-warning danger"><span style="font-size:18px;flex-shrink:0">🚨</span><span class="warn-text">'+esc(cur.warn_danger)+'</span></div>';if(nc)h+='<div class="step-confirm '+(ic?'checked':'')+'" onclick="toggleConfirm('+step+')"><span class="confirm-box">'+(ic?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':'')+'</span><span class="confirm-text">'+esc(cur.confirm)+'</span></div>';h+='</div></div></div><div class="step-nav">';if(step>0)h+='<button class="btn btn-sm" style="padding:10px 20px" onclick="ST.guideStep--;render();window.scrollTo({top:0,behavior:\'smooth\'})">← Anterior</button>';else h+='<div></div>';if(step<total-1)h+='<button class="btn btn-primary" onclick="advStep()" '+(ca?'':'disabled')+'>'+(nc&&!ic?'Confirma':'Siguiente →')+'</button>';else h+='<button class="btn btn-success btn-lg" onclick="advStep()" '+(ca?'':'disabled')+'>Completar ✓</button>';h+='</div>'}h+='</div>';return h}
+
+function rGSel(){const editable=can('editGuides');return'<div class="section"><div class="wizard-hero info"><h2>Guías de procedimiento</h2><p>Manual oficial · BASE LITORAL | BRAVO3</p></div><div class="wizard-selector">'+(editable?'<div class="wizard-card" onclick="startGuide(\'apertura\')"><span class="wc-icon">🔓</span><span class="wc-title">Apertura</span><span class="wc-desc">'+GUIDE_APERTURA.length+' pasos</span></div><div class="wizard-card" onclick="startGuide(\'cierre\')"><span class="wc-icon">🔒</span><span class="wc-title">Cierre</span><span class="wc-desc">'+GUIDE_CIERRE.length+' pasos</span></div><div class="wizard-card" onclick="startGuide(\'trampilla_open\')"><span class="wc-icon">♿</span><span class="wc-title">Trampilla (apert.)</span><span class="wc-desc">'+GUIDE_TRAMPILLA_OPEN.length+' pasos</span></div><div class="wizard-card" onclick="startGuide(\'trampilla_close\')"><span class="wc-icon">♿</span><span class="wc-title">Trampilla (cierre)</span><span class="wc-desc">'+GUIDE_TRAMPILLA_CLOSE.length+' pasos</span></div>':'')+'<div class="wizard-card" onclick="ST.guideMode=\'info\';render()"><span class="wc-icon">📋</span><span class="wc-title">Consideraciones</span><span class="wc-desc">Seguridad</span></div><div class="wizard-card" onclick="ST.guideMode=\'log\';render()" style="border-color:#C0DD97"><span class="wc-icon">📒</span><span class="wc-title">Registro</span><span class="wc-desc">'+ST.guideLogs.length+' procedimientos</span></div></div></div>'}
+
+function rGSetup(){const titles={apertura:"Apertura",cierre:"Cierre",trampilla_open:"Trampilla (apert.)",trampilla_close:"Trampilla (cierre)"};return'<div class="section"><div class="wizard-hero '+ST.guideMode+'"><h2>'+titles[ST.guideMode]+'</h2><p>Registra quién realiza el procedimiento</p></div><div class="setup-box"><h3>Datos del procedimiento</h3><p class="sub">Se registrará en el historial.</p><div class="field"><label>Responsable</label><select id="setup-resp"><option value="">— Seleccionar —</option>'+ST.personnel.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('')+'</select></div><div class="field"><label>Generador</label><select id="setup-gen"><option value="">— Seleccionar —</option>'+GENERATORS.map(g=>'<option value="'+g+'">'+g+'</option>').join('')+'<option value="__custom">Otro</option></select></div><div class="field" id="cg-wrap" style="display:none"><label>Especificar</label><input type="text" id="setup-gen-c"></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px"><button class="btn btn-sm" style="padding:10px 20px" onclick="cancelGuide()">Cancelar</button><button class="btn btn-primary btn-lg" onclick="confirmSetup()">Comenzar →</button></div></div></div>'}
+
+function rGLog(){let h='<div class="section"><div class="wizard-hero info"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><h2>Registro de procedimientos</h2></div><button onclick="ST.guideMode=null;render()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Volver</button></div></div>';if(!ST.guideLogs.length)h+='<div class="empty">Sin registros.</div>';else{ST.guideLogs.slice().reverse().forEach((log,i)=>{const idx=ST.guideLogs.length-1-i;h+='<div class="card"><div class="card-header" style="gap:6px"><span class="log-badge '+log.type+'">'+(GUIDE_LABELS[log.type]||log.type)+'</span><span style="font-weight:700;font-size:13px;font-family:\'JetBrains Mono\',monospace">'+fmtDT(log.datetime)+'</span><span style="flex:1"></span>'+(can('editGuides')?'<button class="btn-danger" onclick="deleteLog('+idx+')">Eliminar</button>':'')+'</div><div class="card-body" style="padding:12px 16px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px"><div><span style="color:#999;font-size:11px;font-weight:600;display:block">RESPONSABLE</span><strong>'+esc(log.responsible)+'</strong></div><div><span style="color:#999;font-size:11px;font-weight:600;display:block">GENERADOR</span><span class="gen-badge">⚡ '+esc(log.generator)+'</span></div></div>'+(log.notes?'<div style="margin-top:10px;padding:10px 12px;background:#F8F8FA;border-radius:8px;font-size:13px;color:#555">'+esc(log.notes)+'</div>':'')+'</div></div>'})}h+='</div>';return h}
+
+function rGInfo(){let h='<div class="section"><div class="wizard-hero info"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><h2>Consideraciones generales</h2></div><button onclick="ST.guideMode=null;render()" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Volver</button></div></div>';CONSIDERACIONES.forEach((c,i)=>{const d=c.includes('NO ')||c.includes('APAGADO')||c.includes('ENCENDIDO');h+='<div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid '+(d?'#FAC775':'#EFEFEF')+';border-radius:10px;margin-bottom:8px;background:'+(d?'#FFFDF5':'#fff')+'"><span style="font-weight:800;color:'+(d?'#854F0B':'#378ADD')+';font-family:\'JetBrains Mono\',monospace;min-width:24px">'+(i+1)+'.</span><span style="font-size:14px;line-height:1.6;color:#444">'+esc(c)+'</span></div>'});h+='</div>';return h}
+
+// ═══════════ TAB: MANUALES (Google Drive) ═══════════
+let manualSearch='';let manualFolder='all';
+function rMan(){
+  const ed=can('uploadManuals');
+  const folders=[{id:'all',name:'Todos'},...ST.folders.sort((a,b)=>(a.order||0)-(b.order||0))];
+  let filtered=ST.manuals||[];
+  if(manualFolder!=='all') filtered=filtered.filter(p=>p.folder===manualFolder);
+  if(manualSearch) filtered=filtered.filter(p=>p.name.toLowerCase().includes(manualSearch.toLowerCase()));
+
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Manuales y documentación</h3><div style="display:flex;gap:8px">'+(ed?'<button class="btn btn-sm" onclick="ST.modal=\'manageFolders\';render()">Carpetas</button><button class="btn btn-primary" onclick="ST.modal=\'addManual\';ST.formData={folder:manualFolder!==\'all\'?manualFolder:ST.folders[0]?.id||\'c-default\'};render()">+ Añadir enlace</button>':'')+'</div></div>';
+  h+='<div class="search-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar manual..." value="'+esc(manualSearch)+'" oninput="manualSearch=this.value;render()"></div>';
+  h+='<div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px">';
+  folders.forEach(f=>{h+='<span class="folder-tab '+(manualFolder===f.id?'active':'')+'" onclick="manualFolder=\''+f.id+'\';render()">'+esc(f.name)+'</span>'});
+  h+='</div>';
+  if(!filtered.length)h+='<div class="empty">'+(ST.manuals.length?'No se encontraron manuales.':'Sin manuales. '+(ed?'Pulsa "+ Añadir enlace" para vincular un documento de Google Drive.':''))+'</div>';
+  else filtered.forEach(m=>{
+    const folderName=ST.folders.find(f=>f.id===m.folder)?.name||'General';
+    const icon=m.tipo==='youtube'?'VID':'PDF';
+    const iconColor=m.tipo==='youtube'?red:pink;
+    h+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(ed?'<button class="btn-danger" onclick="deleteManual(\''+m.id+'\')">Eliminar</button>':'')+'</div></div>'});
+  h+='</div>';return h;
+}
+
+// ═══════════ TAB: VÍDEOS ═══════════
+function rVid(){const ed=can('manageVideos');let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px"><p style="font-size:14px;color:#888;margin:0">Vídeos tutoriales.</p>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addVideo\';render()">+ Añadir</button>':'')+'</div>';if(!ST.videos.length)h+='<div class="empty">Sin vídeos.</div>';else{h+='<div class="video-grid">';ST.videos.forEach(v=>{const ytId=getYouTubeId(v.url);h+='<div class="video-card">';if(ytId){h+='<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px 8px 0 0"><iframe src="https://www.youtube.com/embed/'+ytId+'" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen></iframe></div>'}else{h+='<div class="video-thumb" onclick="'+(v.url?"window.open('"+v.url+"','_blank')":"")+'"><svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,.9)"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>'}h+='<div class="video-body"><p style="font-size:14px;font-weight:600;margin:0 0 4px">'+esc(v.title)+'</p>'+(v.description?'<p style="font-size:12px;color:#888;margin:0 0 8px">'+esc(v.description)+'</p>':'')+'<div style="display:flex;gap:6px">'+(ed?'<button class="btn-danger" onclick="removeVideo(\''+v.id+'\')">Eliminar</button>':'')+'</div></div></div>'});h+='</div>'}h+='</div>';return h}
+function getYouTubeId(url){if(!url)return null;const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&\n?#]+)/);return m?m[1]:null}
+
+// ═══════════ TAB: PERSONAL ═══════════
+function rPer(){const ed=can('managePersonnel');let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px"><select onchange="ST.selGroup=this.value;render()" style="width:180px;padding:8px 12px;border-radius:8px;border:1px solid #E4E4E4;font-size:14px;font-family:inherit"><option value="all" '+(ST.selGroup==="all"?"selected":"")+'>Todos</option>'+Object.entries(GROUPS).map(([k,v])=>'<option value="'+k+'" '+(ST.selGroup===k?"selected":"")+'>'+v.label+'</option>').join('')+'</select>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addPerson\';ST.formData={group:\'agentes\'};render()">+ Añadir</button>':'')+'</div>';
+  const stats=getStats();Object.entries(GROUPS).filter(([k])=>ST.selGroup==="all"||ST.selGroup===k).forEach(([gk,gv])=>{const ms=ST.personnel.filter(p=>p.group===gk);if(!ms.length)return;h+='<div style="margin-bottom:24px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:12px;height:12px;border-radius:4px;background:'+gv.color+';display:inline-block"></span><h3 style="font-size:15px;font-weight:700;margin:0">'+gv.label+'</h3><span style="font-size:12px;color:#999">('+ms.length+')</span></div>';ms.forEach(p=>{const s=stats[p.id]||{despliegue:0,uso:0,conduccion:0};const t=s.despliegue+s.uso+s.conduccion;h+='<div class="person-row"><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:500;font-size:14px">'+esc(p.name)+'</span>'+(p.driver?'<span class="driver-tag">Conductor</span>':'')+'</div>'+(t>0?'<div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap"><span class="mini-stat">'+s.despliegue+' desp.</span><span class="mini-stat">'+s.uso+' uso</span><span class="mini-stat" style="font-weight:600;color:#378ADD">Total: '+t+'</span></div>':'')+'</div>'+(ed?'<div style="display:flex;gap:6px"><button class="btn-sm" onclick="toggleDriver(\''+p.id+'\')">'+( p.driver?'No cond.':'Conductor')+'</button><button class="btn-danger" onclick="ST.modal={type:\'confirmDel\',id:\''+p.id+'\',name:\''+esc(p.name)+'\'};render()">Eliminar</button></div>':'')+'</div>'});h+='</div>'});
+  h+='</div>';return h}
+
+// ═══════════ TAB: USUARIOS ═══════════
+function rUsr(){if(!can('manageUsers'))return'<div class="no-access"><h3>Sin acceso</h3><p>No tienes permisos para gestionar usuarios.</p></div>';
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h3 class="section-head" style="margin:0">Gestión de usuarios</h3><button class="btn btn-primary" onclick="ST.modal=\'addUser\';ST.formData={rol:\'agente\',active:true};render()">+ Añadir usuario</button></div>';
+  if(!ST.users.length)h+='<div class="empty">Sin usuarios registrados.</div>';
+  else ST.users.forEach(u=>{
+    h+='<div class="user-card"><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:14px">'+esc(u.name)+'</span><span class="role-badge '+u.rol+'">'+(ROLES[u.rol]?.label||u.rol)+'</span>'+(u.active===false?'<span style="font-size:10px;color:#A32D2D;font-weight:600">DESACTIVADO</span>':'')+'</div><p style="font-size:12px;color:#999;margin:2px 0 0">Usuario: <strong>'+esc(u.user)+'</strong>'+(u.personaId?' · Vinculado a personal':'')+'</p></div><div style="display:flex;gap:6px"><button class="btn-sm" onclick="editUser(\''+esc(u.user)+'\')">Editar</button></div></div>'});
+  h+='</div>';return h}
+
+// ═══════════ MODAL ═══════════
+function rMod(){const m=ST.modal;let i='';
+  if(m==='userMenu')i='<h3>'+esc(currentUser.name)+'</h3><p style="font-size:13px;color:#888;margin:0 0 16px"><span class="role-badge '+currentUser.rol+'">'+(ROLES[currentUser.rol]?.label||currentUser.rol)+'</span></p><button class="btn btn-sm" style="width:100%;justify-content:center;margin-bottom:8px" onclick="ST.modal=\'changePass\';render()">Cambiar contraseña</button><button class="btn btn-sm" style="width:100%;justify-content:center;margin-bottom:8px;color:#E24B4A;border-color:#F5C0D1" onclick="doLogout()">Cerrar sesión</button><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+  else if(m==='changePass')i='<h3>Cambiar contraseña</h3><div class="field"><label>Contraseña actual</label><input type="password" id="m-oldpass"></div><div class="field"><label>Nueva contraseña</label><input type="password" id="m-newpass"></div><div class="field"><label>Repetir nueva</label><input type="password" id="m-newpass2"></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="doChangePass()">Cambiar</button></div>';
+  else if(m==='addUser'||m==='editUser'){const editing=m==='editUser';const fd=ST.formData;i='<h3>'+(editing?'Editar':'Añadir')+' usuario</h3><div class="field"><label>Nombre completo</label><input type="text" id="m-uname" value="'+esc(fd.name||'')+'"></div><div class="field"><label>Nombre de usuario</label><input type="text" id="m-uuser" value="'+esc(fd.user||'')+'" '+(editing?'disabled':'')+'></div><div class="field"><label>'+(editing?'Nueva contraseña (dejar vacío para no cambiar)':'Contraseña')+'</label><input type="password" id="m-upass" value="'+esc(fd.password||'')+'"></div><div class="field"><label>Rol</label><select id="m-urol">'+Object.entries(ROLES).map(([k,v])=>'<option value="'+k+'" '+(fd.rol===k?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div><div class="field"><label>Vincular a personal (opcional)</label><select id="m-upersona"><option value="">— Sin vincular —</option>'+ST.personnel.map(p=>'<option value="'+p.id+'" '+(fd.personaId===p.id?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div><div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:14px;cursor:pointer"><input type="checkbox" id="m-uactive" '+(fd.active!==false?'checked':'')+'> Usuario activo</label></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitUser('+(editing?'true':'false')+')">'+( editing?'Guardar':'Crear')+'</button></div>'}
+  else if(m==='addPerson')i='<h3>Añadir efectivo</h3><div class="field"><label>Nombre</label><input type="text" id="m-name" placeholder="Nombre y apellidos"></div><div class="field"><label>Grupo</label><select id="m-group">'+Object.entries(GROUPS).map(([k,v])=>'<option value="'+k+'" '+((ST.formData.group||'agentes')===k?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div><div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:14px;cursor:pointer"><input type="checkbox" id="m-driver"> Conductor</label></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitPerson()">Añadir</button></div>';
+  else if(m==='addVideo')i='<h3>Añadir vídeo</h3><div class="field"><label>Título</label><input type="text" id="m-vtitle"></div><div class="field"><label>URL</label><input type="url" id="m-vurl" placeholder="videos/nombre_del_video.mp4"></div><div class="field"><label>Descripción</label><textarea id="m-vdesc" rows="2"></textarea></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitVideo()">Añadir</button></div>';
+  else if(m?.type==='confirmDel')i='<h3>Confirmar</h3><p style="font-size:14px;color:#666;margin:0 0 20px">¿Eliminar a <strong>'+m.name+'</strong>?</p><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" style="background:#D4537E" onclick="removePerson(\''+m.id+'\')">Eliminar</button></div>';
+  else if(m?.type==='playVideo'){const v=ST.videos.find(x=>x.id===m.id);i='<h3 style="margin-bottom:12px">'+esc(v?.title||'')+'</h3><video src="'+(v?.url||'')+'" controls autoplay style="width:100%;border-radius:8px;max-height:60vh"></video><div class="modal-actions" style="margin-top:12px"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>'}
+  else return'';
+  return'<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+i+'</div></div>'}
+
+// ═══════════ ACCIONES ═══════════
+function switchTab(t){ST.tab=t;ST.guideMode=null;ST.guideStep=-1;ST.guideConfirmed={};render()}
+function closeModal(){ST.modal=null;ST.formData={};render()}
+function startGuide(m){if(!can('editGuides'))return;ST.guideMode=m;ST.guideStep=-1;ST.guideConfirmed={};ST.guideResponsible="";ST.guideGenerator="";render();window.scrollTo({top:0,behavior:'smooth'})}
+function cancelGuide(){ST.guideMode=null;ST.guideStep=-1;render()}
+function confirmSetup(){const r=document.getElementById("setup-resp").value;const gs=document.getElementById("setup-gen").value;let g=gs;if(gs==='__custom'){const c=document.getElementById("setup-gen-c");g=c?c.value.trim():''}if(!r){toast("Selecciona responsable");return}if(!g){toast("Selecciona generador");return}ST.guideResponsible=r;ST.guideGenerator=g;ST.guideStep=0;render();window.scrollTo({top:0,behavior:'smooth'})}
+function toggleConfirm(s){ST.guideConfirmed[ST.guideMode+'_'+s]=!ST.guideConfirmed[ST.guideMode+'_'+s];render()}
+function advStep(){ST.guideStep++;render();window.scrollTo({top:0,behavior:'smooth'})}
+
+async function finishGuide(){const el=document.getElementById("guide-notes");const notes=el?el.value.trim():'';const rn=ST.personnel.find(p=>p.id===ST.guideResponsible)?.name||'?';const log={datetime:new Date().toISOString(),type:ST.guideMode,responsibleId:ST.guideResponsible,responsible:rn,generator:ST.guideGenerator,notes};ST.guideLogs.push(log);cacheLocal();await cloud('addGuideLog',{log});toast("Procedimiento registrado");ST.guideMode='log';ST.guideStep=-1;render();window.scrollTo({top:0,behavior:'smooth'})}
+async function deleteLog(idx){ST.guideLogs.splice(idx,1);cacheLocal();await cloud('deleteGuideLog',{rowIndex:idx});render();toast("Eliminado")}
+
+function toggleCheck(pid,task){if(!can('editRecords'))return;if(!ST.records[ST.selDate])ST.records[ST.selDate]={};if(!ST.records[ST.selDate][pid])ST.records[ST.selDate][pid]={};ST.records[ST.selDate][pid][task]=!ST.records[ST.selDate][pid][task];render()}
+async function saveDay(){cacheLocal();const dayRec=ST.records[ST.selDate]||{};const entries=[];Object.entries(dayRec).forEach(([pid,tasks])=>{if(TASKS_DEF.some(t=>tasks[t.key]))entries.push({personaId:pid,despliegue:!!tasks.despliegue,uso:!!tasks.uso,conduccion:!!tasks.conduccion})});await cloud('saveDayRecord',{date:ST.selDate,entries});toast("Guardado — "+fmtDate(ST.selDate))}
+async function deleteDay(d){delete ST.records[d];cacheLocal();await cloud('deleteDayRecord',{date:d});toast("Eliminado");render()}
+async function toggleDriver(id){const p=ST.personnel.find(x=>x.id===id);if(p)p.driver=!p.driver;cacheLocal();await cloud('savePersonnel',{personnel:ST.personnel});render()}
+async function submitPerson(){const n=document.getElementById("m-name").value.trim();const g=document.getElementById("m-group").value;const d=document.getElementById("m-driver").checked;if(!n)return;ST.personnel.push({id:"c-"+Date.now(),name:n,group:g,driver:d});cacheLocal();await cloud('savePersonnel',{personnel:ST.personnel});ST.modal=null;render();toast("Efectivo añadido")}
+async function removePerson(id){ST.personnel=ST.personnel.filter(p=>p.id!==id);cacheLocal();await cloud('savePersonnel',{personnel:ST.personnel});ST.modal=null;render();toast("Eliminado")}
+async function submitVideo(){const t=document.getElementById("m-vtitle").value.trim();const u=document.getElementById("m-vurl").value.trim();const d=document.getElementById("m-vdesc").value.trim();if(!t)return;ST.videos.push({id:"vid-"+Date.now(),title:t,url:u,description:d});cacheLocal();await cloud('saveVideos',{videos:ST.videos});ST.modal=null;render();toast("Vídeo añadido")}
+async function removeVideo(id){ST.videos=ST.videos.filter(v=>v.id!==id);cacheLocal();await cloud('saveVideos',{videos:ST.videos});render();toast("Eliminado")}
+function handlePdf(input){const fs=Array.from(input.files||[]);let ld=0;const folder=manualFolder==='all'?(ST.folders[0]?.id||'c-default'):manualFolder;fs.forEach(f=>{const r=new FileReader();r.onload=()=>{ST.pdfs.push({id:"pdf-"+Date.now()+Math.random(),name:f.name,size:f.size,data:r.result,date:new Date().toISOString().slice(0,10),folder:folder});ld++;if(ld===fs.length){try{localStorage.setItem('pma3_pdfs',JSON.stringify(ST.pdfs))}catch(e){}render();toast(ld+" manual(es) añadido(s)")}};r.readAsDataURL(f)});input.value=""}
+function openPdf(id){const p=ST.pdfs.find(x=>x.id===id);if(!p)return;const w=window.open();w.document.write('<html><head><title>'+p.name+'</title></head><body style="margin:0"><iframe src="'+p.data+'" style="width:100%;height:100vh;border:none"></iframe></body></html>')}
+function removePdf(id){ST.pdfs=ST.pdfs.filter(p=>p.id!==id);try{localStorage.setItem('pma3_pdfs',JSON.stringify(ST.pdfs))}catch(e){}render();toast("Eliminado")}
+function playVideo(id){ST.modal={type:'playVideo',id};render()}
+
+// ── Usuarios ──
+function editUser(username){const u=ST.users.find(x=>x.user===username);if(!u)return;ST.formData={...u,password:''};ST.modal='editUser';render()}
+async function submitUser(editing){const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
+  if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active};if(pass)ST.users[idx].password=pass}}
+  else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active})}
+  cacheLocal();await cloud('saveUsers',{users:ST.users});ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado')}
+async function doChangePass(){const old=document.getElementById('m-oldpass').value;const np=document.getElementById('m-newpass').value;const np2=document.getElementById('m-newpass2').value;if(!old||!np){toast('Rellena todos los campos');return}if(np!==np2){toast('Las contraseñas no coinciden');return}try{const res=await apiPost({action:'changePassword',user:currentUser.user,oldPass:old,newPass:np});if(res.error){toast(res.error);return}toast('Contraseña cambiada');closeModal()}catch(e){toast('Error: '+e.message)}}
+
+// Custom gen select
+document.addEventListener('change',function(e){if(e.target.id==='setup-gen'){const w=document.getElementById('cg-wrap');if(w)w.style.display=e.target.value==='__custom'?'block':'none'}});
+
+// ═══════════ TASK & INCIDENT STATE ═══════════
+let taskFilter='all';let incFilter='all';const INC_CATS=['Mecánica','Eléctrica','Comunicaciones','Equipamiento','Carrocería'];
+
+// ═══════════ TAB: TAREAS ═══════════
+function rTar(){
+  const ed=can('createTasks');
+  const tasks=taskFilter==='all'?ST.tasks:ST.tasks.filter(t=>t.status===taskFilter);
+  const counts={all:ST.tasks.length,pendiente:ST.tasks.filter(t=>t.status==='pendiente').length,en_curso:ST.tasks.filter(t=>t.status==='en_curso').length,completada:ST.tasks.filter(t=>t.status==='completada').length};
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Gestor de tareas</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addTask\';ST.formData={priority:\'media\',status:\'pendiente\'};render()">+ Nueva tarea</button>':'')+'</div>';
+  h+='<div class="filter-bar">';
+  const fColors={all:'',pendiente:'background:#E24B4A;color:#fff;border-color:#E24B4A',en_curso:'background:#E8A817;color:#fff;border-color:#E8A817',completada:'background:#1D9E75;color:#fff;border-color:#1D9E75'};
+  [['all','Todas ('+counts.all+')'],['pendiente','Pendientes ('+counts.pendiente+')'],['en_curso','En curso ('+counts.en_curso+')'],['completada','Completadas ('+counts.completada+')']].forEach(([k,l])=>{
+    const active=taskFilter===k;
+    const style=active&&fColors[k]?fColors[k]:(active?'background:var(--navy);color:#fff;border-color:var(--navy)':'');
+    h+='<span class="filter-chip" style="'+(style)+'" onclick="taskFilter=\''+k+'\';render()">'+l+'</span>';
+  });
+  h+='</div>';
+  if(!tasks.length)h+='<div class="empty">'+(ST.tasks.length?'No hay tareas con ese filtro.':'No hay tareas creadas.')+'</div>';
+  else tasks.sort((a,b)=>{const po={alta:0,media:1,baja:2};return (po[a.priority]||1)-(po[b.priority]||1)}).forEach(t=>{
+    const assignees=t.assignedTo?t.assignedTo.split(',').map(id=>ST.personnel.find(p=>p.id===id.trim())?.name||id).join(', '):'Sin asignar';
+    const comments=ST.taskComments.filter(c=>c.taskId===t.id);
+    h+='<div class="task-card" onclick="ST.modal={type:\'viewTask\',id:\''+t.id+'\'};render()"><div class="tc-head"><span class="tc-title">'+esc(t.title)+'</span><div style="display:flex;gap:4px"><span class="prio-badge '+t.priority+'">'+t.priority+'</span><span class="status-badge '+t.status+'">'+t.status.replace('_',' ')+'</span></div></div>';
+    if(t.description)h+='<p style="font-size:13px;color:#666;margin:0 0 6px;line-height:1.4">'+esc(t.description).slice(0,120)+(t.description.length>120?'...':'')+'</p>';
+    h+='<div class="tc-meta"><span>Asignada: '+esc(assignees)+'</span>';
+    if(t.deadline)h+='<span>Límite: '+fmtDate(t.deadline.slice(0,10))+'</span>';
+    if(comments.length)h+='<span>'+comments.length+' comentario'+(comments.length>1?'s':'')+'</span>';
+    h+='</div></div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ TAB: INCIDENCIAS ═══════════
+function rInc(){
+  const ed=can('createIncidents');
+  const incs=incFilter==='all'?ST.incidents:ST.incidents.filter(i=>i.status===incFilter);
+  const counts={all:ST.incidents.length,abierta:ST.incidents.filter(i=>i.status==='abierta').length,en_curso:ST.incidents.filter(i=>i.status==='en_curso').length,resuelta:ST.incidents.filter(i=>i.status==='resuelta').length};
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Incidencias del vehículo</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addIncident\';ST.formData={category:\'Mecánica\',status:\'abierta\'};render()">+ Nueva incidencia</button>':'')+'</div>';
+  h+='<div class="filter-bar">';
+  [['all','Todas ('+counts.all+')'],['abierta','Abiertas ('+counts.abierta+')'],['en_curso','En curso ('+counts.en_curso+')'],['resuelta','Resueltas ('+counts.resuelta+')']].forEach(([k,l])=>{
+    h+='<span class="filter-chip '+(incFilter===k?'active':'')+'" onclick="incFilter=\''+k+'\';render()">'+l+'</span>';
+  });
+  h+='</div>';
+  if(!incs.length)h+='<div class="empty">'+(ST.incidents.length?'No hay incidencias con ese filtro.':'No hay incidencias registradas.')+'</div>';
+  else incs.sort((a,b)=>{const so={abierta:0,en_curso:1,resuelta:2};return (so[a.status]||0)-(so[b.status]||0)}).forEach(inc=>{
+    const comments=ST.incidentComments.filter(c=>c.incidentId===inc.id);
+    const photos=ST.incidentPhotos.filter(p=>p.incidentId===inc.id);
+    const assignee=inc.assignedTo||'Sin asignar';
+    h+='<div class="task-card" onclick="ST.modal={type:\'viewIncident\',id:\''+inc.id+'\'};render()"><div class="tc-head"><span class="tc-title">'+esc(inc.title)+'</span><div style="display:flex;gap:4px"><span class="cat-badge">'+esc(inc.category)+'</span><span class="status-badge '+inc.status+'">'+inc.status.replace('_',' ')+'</span></div></div>';
+    if(inc.description)h+='<p style="font-size:13px;color:#666;margin:0 0 6px;line-height:1.4">'+esc(inc.description).slice(0,120)+(inc.description.length>120?'...':'')+'</p>';
+    h+='<div class="tc-meta"><span>Reportada: '+esc(inc.reportedByName||'')+'</span><span>Asignada: '+esc(assignee)+'</span>';
+    if(comments.length)h+='<span>'+comments.length+' com.</span>';
+    if(photos.length)h+='<span>'+photos.length+' foto'+(photos.length>1?'s':'')+'</span>';
+    h+='</div></div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ TASK & INCIDENT MODALS (added to rMod) ═══════════
+const _origRMod=rMod;
+rMod=function(){
+  const m=ST.modal;
+  // ── Add Task ──
+  if(m==='addTask'){
+    const fd=ST.formData;
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Nueva tarea</h3>'+
+      '<div class="field"><label>Título</label><input type="text" id="mt-title" value="'+esc(fd.title||'')+'"></div>'+
+      '<div class="field"><label>Descripción</label><textarea id="mt-desc" rows="3">'+esc(fd.description||'')+'</textarea></div>'+
+      '<div class="field"><label>Asignar a</label><select id="mt-assign" multiple style="height:120px">'+ST.personnel.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('')+'</select><p style="font-size:11px;color:#999;margin:4px 0 0">Mantén Ctrl para seleccionar varios</p></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field" style="flex:1;min-width:120px"><label>Prioridad</label><select id="mt-prio"><option value="alta">Alta</option><option value="media" selected>Media</option><option value="baja">Baja</option></select></div>'+
+      '<div class="field" style="flex:1;min-width:120px"><label>Fecha límite</label><input type="date" id="mt-deadline"></div></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitTask()">Crear tarea</button></div></div></div>';
+  }
+  // ── View Task ──
+  if(m?.type==='viewTask'){
+    const t=ST.tasks.find(x=>x.id===m.id);if(!t)return'';
+    const comments=ST.taskComments.filter(c=>c.taskId===t.id).sort((a,b)=>a.date>b.date?1:-1);
+    const assignees=t.assignedTo?t.assignedTo.split(',').map(id=>ST.personnel.find(p=>p.id===id.trim())?.name||id).join(', '):'Sin asignar';
+    const ed=can('editTasks');
+    let i='<h3>'+esc(t.title)+'</h3>';
+    i+='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap"><span class="prio-badge '+t.priority+'">'+t.priority+'</span><span class="status-badge '+t.status+'">'+t.status.replace('_',' ')+'</span></div>';
+    if(t.description)i+='<p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 12px">'+esc(t.description)+'</p>';
+    i+='<div style="font-size:13px;color:#888;margin-bottom:12px"><div>Asignada a: <strong>'+esc(assignees)+'</strong></div>';
+    if(t.deadline)i+='<div>Fecha límite: <strong>'+fmtDate(t.deadline.slice(0,10))+'</strong></div>';
+    i+='<div>Creada: '+fmtDT(t.created)+'</div></div>';
+    if(ed){
+      i+='<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"><label>Estado:</label><select id="mt-status" onchange="changeTaskStatus(\''+t.id+'\',this.value)">';
+      ['pendiente','en_curso','completada'].forEach(s=>{i+='<option value="'+s+'" '+(t.status===s?'selected':'')+'>'+s.replace('_',' ')+'</option>'});
+      i+='</select>'+'<button class="btn-danger" onclick="deleteTask(\''+t.id+'\')">Eliminar tarea</button></div>';
+    }
+    i+='<h4 style="font-size:13px;font-weight:700;margin:16px 0 8px;text-transform:uppercase;color:#999">Comentarios ('+comments.length+')</h4>';
+    if(comments.length){i+='<div class="comment-box">';comments.forEach(c=>{i+='<div class="comment-item"><span class="comment-author">'+esc(c.authorName)+'</span><span class="comment-date">'+fmtDT(c.date)+'</span><p style="margin:4px 0 0;font-size:13px;color:#444">'+esc(c.text)+'</p></div>'});i+='</div>'}
+    i+='<div style="display:flex;gap:8px;margin-top:10px"><input type="text" id="mt-comment" placeholder="Escribe un comentario..." style="flex:1"><button class="btn btn-sm" onclick="addTaskComment(\''+t.id+'\')">Enviar</button></div>';
+    i+='<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" style="max-width:560px" onclick="event.stopPropagation()">'+i+'</div></div>';
+  }
+  // ── Add Incident ──
+  if(m==='addIncident'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Nueva incidencia</h3>'+
+      '<div class="field"><label>Título</label><input type="text" id="mi-title"></div>'+
+      '<div class="field"><label>Descripción</label><textarea id="mi-desc" rows="3"></textarea></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field" style="flex:1;min-width:140px"><label>Categoría</label><select id="mi-cat">'+INC_CATS.map(c=>'<option value="'+c+'">'+c+'</option>').join('')+'</select></div>'+
+      '<div class="field" style="flex:1;min-width:140px"><label>Asignar a</label><select id="mi-assign"><option value="">— Sin asignar —</option><option value="Iturri">Iturri</option><option value="Base Litoral">Base Litoral</option><option value="Operador de Sistemas">Operador de Sistemas</option></select></div></div>'+
+      '<div class="field"><label>Fotos (opcional)</label><input type="file" id="mi-photos" accept="image/*" multiple></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitIncident()">Crear incidencia</button></div></div></div>';
+  }
+  // ── View Incident ──
+  if(m?.type==='viewIncident'){
+    const inc=ST.incidents.find(x=>x.id===m.id);if(!inc)return'';
+    const comments=ST.incidentComments.filter(c=>c.incidentId===inc.id).sort((a,b)=>a.date>b.date?1:-1);
+    const photos=ST.incidentPhotos.filter(p=>p.incidentId===inc.id);
+    const assignee=inc.assignedTo||'Sin asignar';
+    const ed=can('editIncidents');
+    let i='<h3>'+esc(inc.title)+'</h3>';
+    i+='<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap"><span class="cat-badge">'+esc(inc.category)+'</span><span class="status-badge '+inc.status+'">'+inc.status.replace('_',' ')+'</span></div>';
+    if(inc.description)i+='<p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 12px">'+esc(inc.description)+'</p>';
+    i+='<div style="font-size:13px;color:#888;margin-bottom:12px"><div>Reportada por: <strong>'+esc(inc.reportedByName||'')+'</strong></div><div>Asignada a: <strong>'+esc(assignee)+'</strong></div><div>Fecha: '+fmtDT(inc.created)+'</div></div>';
+    if(photos.length){i+='<h4 style="font-size:13px;font-weight:700;margin:0 0 6px;color:#999">FOTOS</h4><div class="photo-grid">';photos.forEach(p=>{i+='<img class="photo-thumb" src="'+p.data+'" alt="'+esc(p.name)+'" onclick="window.open(\''+p.data+'\',\'_blank\')">'});i+='</div>';}
+    if(ed){
+      i+='<div style="display:flex;gap:8px;margin:16px 0;flex-wrap:wrap"><label>Estado:</label><select id="mi-status" onchange="changeIncStatus(\''+inc.id+'\',this.value)">';
+      ['abierta','en_curso','resuelta'].forEach(s=>{i+='<option value="'+s+'" '+(inc.status===s?'selected':'')+'>'+s.replace('_',' ')+'</option>'});
+      i+='</select><button class="btn-sm" onclick="addIncPhoto(\''+inc.id+'\')">Adjuntar foto</button><input type="file" id="mi-photo-input" accept="image/*" style="display:none"><button class="btn-danger" onclick="deleteIncident(\''+inc.id+'\')">Eliminar</button></div>';
+    }
+    i+='<h4 style="font-size:13px;font-weight:700;margin:16px 0 8px;text-transform:uppercase;color:#999">Seguimiento ('+comments.length+')</h4>';
+    if(comments.length){i+='<div class="comment-box">';comments.forEach(c=>{i+='<div class="comment-item"><span class="comment-author">'+esc(c.authorName)+'</span><span class="comment-date">'+fmtDT(c.date)+'</span><p style="margin:4px 0 0;font-size:13px;color:#444">'+esc(c.text)+'</p></div>'});i+='</div>';}
+    i+='<div style="display:flex;gap:8px;margin-top:10px"><input type="text" id="mi-comment" placeholder="Añadir comentario de seguimiento..." style="flex:1"><button class="btn btn-sm" onclick="addIncComment(\''+inc.id+'\')">Enviar</button></div>';
+    i+='<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" style="max-width:560px" onclick="event.stopPropagation()">'+i+'</div></div>';
+  }
+  // Fallback to original modals
+  return _origRMod();
+};
+
+// ═══════════ TASK ACTIONS ═══════════
+async function submitTask(){
+  const title=document.getElementById('mt-title').value.trim();
+  const desc=document.getElementById('mt-desc').value.trim();
+  const sel=document.getElementById('mt-assign');
+  const assigned=Array.from(sel.selectedOptions).map(o=>o.value).join(',');
+  const prio=document.getElementById('mt-prio').value;
+  const deadline=document.getElementById('mt-deadline').value;
+  if(!title){toast('El título es obligatorio');return}
+  const task={id:'task-'+Date.now(),title,description:desc,createdBy:currentUser.user,assignedTo:assigned,deadline,priority:prio,status:'pendiente',created:new Date().toISOString()};
+  ST.tasks.push(task);cacheLocal();await cloud('saveTask',{task});ST.modal=null;render();toast('Tarea creada');
+}
+async function changeTaskStatus(id,status){
+  const t=ST.tasks.find(x=>x.id===id);if(!t)return;t.status=status;cacheLocal();await cloud('saveTask',{task:t});render();toast('Estado actualizado');
+}
+async function deleteTask(id){
+  ST.tasks=ST.tasks.filter(t=>t.id!==id);ST.taskComments=ST.taskComments.filter(c=>c.taskId!==id);cacheLocal();await cloud('deleteTask',{id});ST.modal=null;render();toast('Tarea eliminada');
+}
+async function addTaskComment(taskId){
+  const el=document.getElementById('mt-comment');const text=el?.value.trim();if(!text)return;
+  const comment={id:'tc-'+Date.now(),taskId,author:currentUser.user,authorName:currentUser.name,text,date:new Date().toISOString()};
+  ST.taskComments.push(comment);cacheLocal();await cloud('addTaskComment',{comment});ST.modal={type:'viewTask',id:taskId};render();toast('Comentario añadido');
+}
+
+// ═══════════ INCIDENT ACTIONS ═══════════
+async function submitIncident(){
+  const title=document.getElementById('mi-title').value.trim();
+  const desc=document.getElementById('mi-desc').value.trim();
+  const cat=document.getElementById('mi-cat').value;
+  const assigned=document.getElementById('mi-assign').value;
+  if(!title){toast('El título es obligatorio');return}
+  const inc={id:'inc-'+Date.now(),title,description:desc,category:cat,reportedBy:currentUser.user,reportedByName:currentUser.name,assignedTo:assigned,status:'abierta',created:new Date().toISOString()};
+  ST.incidents.push(inc);cacheLocal();await cloud('saveIncident',{incident:inc});
+  // Handle photos
+  const photoInput=document.getElementById('mi-photos');
+  if(photoInput&&photoInput.files.length){
+    const files=Array.from(photoInput.files);
+    for(const f of files){
+      const data=await readFileAsDataURL(f);
+      const photo={id:'ph-'+Date.now()+Math.random().toString(36).slice(2,4),incidentId:inc.id,data,name:f.name,date:new Date().toISOString()};
+      ST.incidentPhotos.push(photo);await cloud('addIncidentPhoto',{photo});
+    }
+  }
+  ST.modal=null;render();toast('Incidencia creada');
+}
+function readFileAsDataURL(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(file)})}
+async function changeIncStatus(id,status){
+  const inc=ST.incidents.find(x=>x.id===id);if(!inc)return;inc.status=status;cacheLocal();await cloud('saveIncident',{incident:inc});render();toast('Estado actualizado');
+}
+async function deleteIncident(id){
+  ST.incidents=ST.incidents.filter(i=>i.id!==id);ST.incidentComments=ST.incidentComments.filter(c=>c.incidentId!==id);ST.incidentPhotos=ST.incidentPhotos.filter(p=>p.incidentId!==id);cacheLocal();await cloud('deleteIncident',{id});ST.modal=null;render();toast('Incidencia eliminada');
+}
+async function addIncComment(incId){
+  const el=document.getElementById('mi-comment');const text=el?.value.trim();if(!text)return;
+  const comment={id:'ic-'+Date.now(),incidentId:incId,author:currentUser.user,authorName:currentUser.name,text,date:new Date().toISOString()};
+  ST.incidentComments.push(comment);cacheLocal();await cloud('addIncidentComment',{comment});ST.modal={type:'viewIncident',id:incId};render();toast('Comentario añadido');
+}
+async function addIncPhoto(incId){
+  const input=document.getElementById('mi-photo-input');
+  if(!input)return;
+  input.onchange=async function(){
+    const files=Array.from(input.files);
+    for(const f of files){
+      const data=await readFileAsDataURL(f);
+      const photo={id:'ph-'+Date.now()+Math.random().toString(36).slice(2,4),incidentId:incId,data,name:f.name,date:new Date().toISOString()};
+      ST.incidentPhotos.push(photo);cacheLocal();await cloud('addIncidentPhoto',{photo});
+    }
+    ST.modal={type:'viewIncident',id:incId};render();toast('Foto(s) añadida(s)');
+  };
+  input.click();
+}
+
+// ═══════════ TAB: RUTAS DE CONDUCCIÓN ═══════════
+const DIFF_LEVELS=[{k:'facil',l:'Fácil'},{k:'media',l:'Media'},{k:'dificil',l:'Difícil'}];
+function rRut(){
+  if(!can('viewRoutes'))return'<div class="no-access"><h3>Sin acceso</h3><p>Las rutas solo son visibles para conductores.</p></div>';
+  const ed=can('manageRoutes');const canReg=can('registerRoutes');
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Rutas de prácticas de conducción</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addRoute\';ST.formData={difficulty:\'media\'};render()">+ Nueva ruta</button>':'')+'</div>';
+  if(!ST.routes.length)h+='<div class="empty">No hay rutas definidas.</div>';
+  else ST.routes.forEach(rt=>{
+    const logs=ST.routeLogs.filter(l=>l.routeId===rt.id);
+    const completedBy=logs.map(l=>l.driverName);
+    const myLogs=logs.filter(l=>l.driverId===(currentUser.personaId||''));
+    h+='<div class="route-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:8px"><div style="flex:1;min-width:0"><h4 style="font-size:16px;font-weight:700;margin:0 0 4px">'+esc(rt.name)+'</h4>'+
+      '<div style="display:flex;gap:4px;flex-wrap:wrap"><span class="diff-badge '+rt.difficulty+'">'+esc(DIFF_LEVELS.find(d=>d.k===rt.difficulty)?.l||rt.difficulty)+'</span></div></div>'+
+      (ed?'<button class="btn-danger" onclick="deleteRoute(\''+rt.id+'\')">Eliminar</button>':'')+'</div>';
+    if(rt.description)h+='<p style="font-size:14px;color:#555;line-height:1.5;margin:0 0 10px">'+esc(rt.description)+'</p>';
+    h+='<div style="margin-bottom:8px">';
+    if(rt.distance)h+='<span class="route-stat">📏 '+esc(rt.distance)+'</span>';
+    if(rt.time)h+='<span class="route-stat">⏱ '+esc(rt.time)+'</span>';
+    h+='<span class="route-stat">✅ '+logs.length+' completada'+(logs.length!==1?'s':'')+'</span></div>';
+    if(rt.waypoints)h+='<div style="font-size:13px;color:#666;margin-bottom:8px;padding:10px 12px;background:#F8F8FA;border-radius:8px;line-height:1.5"><strong style="font-size:11px;color:#999;text-transform:uppercase;display:block;margin-bottom:4px">Puntos de paso</strong>'+esc(rt.waypoints)+'</div>';
+    if(rt.mapsUrl)h+='<a href="'+esc(rt.mapsUrl)+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:13px;color:#378ADD;text-decoration:none;margin-bottom:8px">📍 Ver en Google Maps</a><br>';
+    if(completedBy.length){h+='<div class="completion-list">';completedBy.forEach(n=>{h+='<span class="completion-chip">'+esc(n)+'</span>'});h+='</div>';}
+    if(canReg)h+='<div style="margin-top:10px"><button class="btn btn-sm" onclick="ST.modal={type:\'regRoute\',id:\''+rt.id+'\'};render()">'+(myLogs.length?'Registrar otra práctica':'Registrar práctica')+'</button></div>';
+    h+='</div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ ROUTE & FOLDER MODALS (extend rMod) ═══════════
+const _origRMod2=rMod;
+rMod=function(){
+  const m=ST.modal;
+
+  // ── Add Route ──
+  if(m==='addRoute'){
+    const fd=ST.formData;
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Nueva ruta de conducción</h3>'+
+      '<div class="field"><label>Nombre de la ruta</label><input type="text" id="mr-name" value="'+esc(fd.name||'')+'"></div>'+
+      '<div class="field"><label>Descripción del recorrido</label><textarea id="mr-desc" rows="3">'+esc(fd.description||'')+'</textarea></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field" style="flex:1;min-width:100px"><label>Distancia</label><input type="text" id="mr-dist" placeholder="ej: 12 km" value="'+esc(fd.distance||'')+'"></div>'+
+      '<div class="field" style="flex:1;min-width:100px"><label>Tiempo estimado</label><input type="text" id="mr-time" placeholder="ej: 45 min" value="'+esc(fd.time||'')+'"></div>'+
+      '<div class="field" style="flex:1;min-width:100px"><label>Dificultad</label><select id="mr-diff">'+DIFF_LEVELS.map(d=>'<option value="'+d.k+'" '+((fd.difficulty||'media')===d.k?'selected':'')+'>'+d.l+'</option>').join('')+'</select></div></div>'+
+      '<div class="field"><label>Puntos de paso / indicaciones</label><textarea id="mr-waypoints" rows="3" placeholder="Describe las indicaciones paso a paso...">'+esc(fd.waypoints||'')+'</textarea></div>'+
+      '<div class="field"><label>Enlace a Google Maps</label><input type="url" id="mr-maps" placeholder="https://maps.google.com/..." value="'+esc(fd.mapsUrl||'')+'"></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitRoute()">Crear ruta</button></div></div></div>';
+  }
+
+  // ── Register Route Completion ──
+  if(m?.type==='regRoute'){
+    const rt=ST.routes.find(x=>x.id===m.id);
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar práctica</h3>'+
+      '<p style="font-size:14px;color:#555;margin:0 0 16px">Ruta: <strong>'+esc(rt?.name||'')+'</strong></p>'+
+      '<div class="field"><label>Conductor</label><select id="mr-driver">'+ST.personnel.filter(p=>p.driver).map(p=>'<option value="'+p.id+'" '+(p.id===(currentUser.personaId||'')?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>Fecha</label><input type="date" id="mr-date" value="'+new Date().toISOString().slice(0,10)+'"></div>'+
+      '<div class="field"><label>Observaciones (opcional)</label><textarea id="mr-notes" rows="2"></textarea></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-success" onclick="submitRouteLog(\''+m.id+'\')">Registrar</button></div></div></div>';
+  }
+
+  // ── Manage Folders ──
+  if(m==='manageFolders'){
+    let i='<h3>Gestionar carpetas</h3>';
+    ST.folders.sort((a,b)=>(a.order||0)-(b.order||0)).forEach((f,idx)=>{
+      i+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F3F3F3"><span style="flex:1;font-size:14px;font-weight:500">'+esc(f.name)+'</span><button class="btn-danger" onclick="deleteFolder(\''+f.id+'\')">Eliminar</button></div>';
+    });
+    i+='<div style="display:flex;gap:8px;margin-top:14px"><input type="text" id="mf-name" placeholder="Nombre de la carpeta" style="flex:1"><button class="btn btn-primary" onclick="addFolder()">Añadir</button></div>';
+    i+='<div class="modal-actions" style="margin-top:16px"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+i+'</div></div>';
+  }
+
+  return _origRMod2();
+};
+
+// ═══════════ ROUTE ACTIONS ═══════════
+async function submitRoute(){
+  const name=document.getElementById('mr-name').value.trim();
+  const desc=document.getElementById('mr-desc').value.trim();
+  const dist=document.getElementById('mr-dist').value.trim();
+  const time=document.getElementById('mr-time').value.trim();
+  const diff=document.getElementById('mr-diff').value;
+  const waypoints=document.getElementById('mr-waypoints').value.trim();
+  const maps=document.getElementById('mr-maps').value.trim();
+  if(!name){toast('El nombre es obligatorio');return}
+  const route={id:'rt-'+Date.now(),name,description:desc,distance:dist,time,difficulty:diff,waypoints,mapsUrl:maps,createdBy:currentUser.user,created:new Date().toISOString()};
+  ST.routes.push(route);cacheLocal();await cloud('saveRoute',{route});ST.modal=null;render();toast('Ruta creada');
+}
+async function deleteRoute(id){
+  ST.routes=ST.routes.filter(r=>r.id!==id);ST.routeLogs=ST.routeLogs.filter(l=>l.routeId!==id);cacheLocal();await cloud('deleteRoute',{id});render();toast('Ruta eliminada');
+}
+async function submitRouteLog(routeId){
+  const driverId=document.getElementById('mr-driver').value;
+  const date=document.getElementById('mr-date').value;
+  const notes=document.getElementById('mr-notes').value.trim();
+  const driverName=ST.personnel.find(p=>p.id===driverId)?.name||'';
+  if(!driverId){toast('Selecciona un conductor');return}
+  const log={id:'rl-'+Date.now(),routeId,driverId,driverName,date,notes};
+  ST.routeLogs.push(log);cacheLocal();await cloud('addRouteLog',{log});ST.modal=null;render();toast('Práctica registrada');
+}
+
+// ═══════════ FOLDER ACTIONS ═══════════
+async function addFolder(){
+  const name=document.getElementById('mf-name').value.trim();
+  if(!name){toast('Escribe un nombre');return}
+  ST.folders.push({id:'f-'+Date.now(),name,order:ST.folders.length,createdBy:currentUser.user});
+  cacheLocal();await cloud('saveFolders',{folders:ST.folders});ST.modal='manageFolders';render();toast('Carpeta creada');
+}
+async function deleteFolder(id){
+  ST.folders=ST.folders.filter(f=>f.id!==id);
+  ST.pdfs.forEach(p=>{if(p.folder===id)p.folder=ST.folders[0]?.id||'c-default'});
+  cacheLocal();await cloud('saveFolders',{folders:ST.folders});ST.modal='manageFolders';render();toast('Carpeta eliminada');
+}
+
+// ═══════════ GEMINI API CONFIG ═══════════
+// Para usar el chat IA, necesitas una API key gratuita de Google AI Studio:
+// 1. Ve a aistudio.google.com
+// 2. Pulsa "Get API key" → "Create API key"
+// 3. Pega la key aquí abajo
+const GEMINI_KEY = 'PEGAR_AQUI_TU_GEMINI_KEY';
+function geminiOk(){return GEMINI_KEY&&GEMINI_KEY!=='PEGAR_AQUI_TU_GEMINI_KEY'&&GEMINI_KEY.length>10}
+let chatMessages=[];
+
+// ═══════════ TAB: FAQs ═══════════
+let faqSearch='';let faqShowPending=false;
+function rFaq(){
+  const canApprove=can('approveFAQ');const canPropose=can('proposeFAQ');
+  const pending=ST.faqs.filter(f=>!f.approved);
+  let filtered=faqShowPending?pending:ST.faqs.filter(f=>f.approved);
+  if(faqSearch)filtered=filtered.filter(f=>f.question.toLowerCase().includes(faqSearch.toLowerCase())||f.answer.toLowerCase().includes(faqSearch.toLowerCase()));
+
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Preguntas frecuentes</h3><div style="display:flex;gap:8px">';
+  if(canApprove&&pending.length)h+='<button class="btn btn-sm" style="'+(faqShowPending?'background:#FEF7E0;color:#854F0B;border-color:#FAC775':'')+'" onclick="faqShowPending=!faqShowPending;render()">Pendientes ('+pending.length+')</button>';
+  if(canPropose)h+='<button class="btn btn-primary" onclick="ST.modal=\'addFAQ\';ST.formData={};render()">+ Proponer pregunta</button>';
+  h+='</div></div>';
+  h+='<div class="search-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar en FAQs..." value="'+esc(faqSearch)+'" oninput="faqSearch=this.value;render()"></div>';
+  if(!filtered.length)h+='<div class="empty">'+(faqShowPending?'No hay preguntas pendientes de aprobación.':'No hay FAQs. '+(canPropose?'Propón la primera pregunta.':''))+'</div>';
+  else filtered.forEach(f=>{
+    h+='<div class="faq-card '+(f.approved?'':'faq-pending')+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div style="flex:1"><p class="faq-q">'+esc(f.question)+'</p><p class="faq-a">'+esc(f.answer)+'</p>';
+    if(f.category)h+='<span style="font-size:11px;color:#999;margin-top:6px;display:inline-block">'+esc(f.category)+'</span>';
+    if(!f.approved)h+=' <span style="font-size:11px;color:#854F0B;font-weight:600">— Pendiente de aprobación</span>';
+    h+='</div><div style="display:flex;gap:4px;flex-shrink:0">';
+    if(canApprove&&!f.approved)h+='<button class="btn btn-sm" style="color:#1D9E75;border-color:#C0DD97" onclick="approveFAQ(\''+f.id+'\')">Aprobar</button>';
+    if(canApprove)h+='<button class="btn-danger" onclick="deleteFAQ(\''+f.id+'\')">Eliminar</button>';
+    h+='</div></div></div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ TAB: CHAT IA ═══════════
+function rChat(){
+  if(!can('useChat'))return'<div class="no-access"><h3>Sin acceso</h3><p>No tienes permisos para usar el chat.</p></div>';
+  let h='<div class="section"><div class="chat-container">';
+  if(!geminiOk()){
+    h+='<div class="chat-config"><strong>Chat IA no configurado</strong><br><br>Para activar el asistente inteligente:<br>1. Ve a <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/apikey</a><br>2. Pulsa "Create API key" (es gratis)<br>3. Abre el archivo index.html con un editor de texto<br>4. Busca la línea <code>PEGAR_AQUI_TU_GEMINI_KEY</code> y sustituye por tu key<br>5. Sube de nuevo a Netlify</div>';
+    h+='</div></div>';return h;
+  }
+  h+='<div class="chat-messages" id="chat-msgs">';
+  if(!chatMessages.length){
+    h+='<div style="text-align:center;padding:40px 20px;color:#BBB"><p style="font-size:32px;margin:0 0 8px">🤖</p><p style="font-size:14px;margin:0 0 4px">Asistente BASE LITORAL | BRAVO3</p><p style="font-size:12px">Pregúntame sobre el camión, los procedimientos, equipamiento o cualquier aspecto operativo.</p></div>';
+  } else {
+    chatMessages.forEach(m=>{
+      h+='<div class="chat-msg '+m.role+'">';
+      if(m.role==='ai')h+='<div class="ai-label">Asistente IA</div>';
+      h+=esc(m.text).replace(/\n/g,'<br>')+'</div>';
+    });
+  }
+  h+='</div>';
+  h+='<div class="chat-input-bar"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeydown="if(event.key===\'Enter\')sendChat()"><button class="btn btn-primary" onclick="sendChat()">Enviar</button></div>';
+  h+='</div></div>';return h;
+}
+
+// ═══════════ FAQ ACTIONS ═══════════
+async function approveFAQ(id){
+  const f=ST.faqs.find(x=>x.id===id);if(!f)return;f.approved=true;
+  cacheLocal();await cloud('saveFAQ',{faq:f});render();toast('FAQ aprobada');
+}
+async function deleteFAQ(id){
+  ST.faqs=ST.faqs.filter(f=>f.id!==id);cacheLocal();await cloud('deleteFAQ',{id});render();toast('FAQ eliminada');
+}
+
+// ═══════════ FAQ MODAL (extend rMod) ═══════════
+const _origRMod3=rMod;
+rMod=function(){
+  const m=ST.modal;
+  if(m==='addFAQ'){
+    const isAdmin=can('approveFAQ');
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>'+(isAdmin?'Añadir FAQ':'Proponer pregunta')+'</h3>'+
+      '<div class="field"><label>Pregunta</label><input type="text" id="mfq-q" placeholder="¿Cómo se...?"></div>'+
+      '<div class="field"><label>Respuesta</label><textarea id="mfq-a" rows="4" placeholder="La respuesta a la pregunta..."></textarea></div>'+
+      '<div class="field"><label>Categoría (opcional)</label><input type="text" id="mfq-cat" placeholder="ej: Despliegue, Comunicaciones..."></div>'+
+      (isAdmin?'':'<p style="font-size:12px;color:#888;margin:0 0 12px">Tu propuesta será revisada y aprobada por un administrador.</p>')+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitFAQ()">'+( isAdmin?'Añadir':'Proponer')+'</button></div></div></div>';
+  }
+  return _origRMod3();
+};
+
+async function submitFAQ(){
+  const q=document.getElementById('mfq-q').value.trim();
+  const a=document.getElementById('mfq-a').value.trim();
+  const cat=document.getElementById('mfq-cat').value.trim();
+  if(!q||!a){toast('Pregunta y respuesta son obligatorias');return}
+  const isAdmin=can('approveFAQ');
+  const faq={id:'faq-'+Date.now(),question:q,answer:a,category:cat,approved:isAdmin,proposedBy:currentUser.name,date:new Date().toISOString()};
+  ST.faqs.push(faq);cacheLocal();await cloud('saveFAQ',{faq});ST.modal=null;render();
+  toast(isAdmin?'FAQ añadida':'Propuesta enviada — pendiente de aprobación');
+}
+
+// ═══════════ CHAT IA — GEMINI ═══════════
+async function sendChat(){
+  const input=document.getElementById('chat-input');
+  const text=input?.value.trim();if(!text)return;
+  chatMessages.push({role:'user',text});
+  input.value='';render();
+  scrollChat();
+
+  // Construir contexto con información de la app
+  const context=buildContext();
+  const messages=chatMessages.map(m=>({role:m.role==='user'?'user':'model',parts:[{text:m.text}]}));
+  // Insertar contexto del sistema en el primer mensaje
+  const systemPrompt='Eres el asistente inteligente de BASE LITORAL | BRAVO3, un puesto de mando avanzado. Responde en español, de forma concisa y profesional. Tienes acceso a la siguiente información del sistema:\n\n'+context+'\n\nResponde basándote en esta información cuando sea relevante. Si no tienes la respuesta, dilo claramente.';
+
+  const apiMessages=[{role:'user',parts:[{text:systemPrompt}]},{role:'model',parts:[{text:'Entendido. Soy el asistente de BASE LITORAL | BRAVO3. ¿En qué puedo ayudarte?'}]},...messages];
+
+  // Añadir mensaje "escribiendo..."
+  chatMessages.push({role:'ai',text:'Pensando...',typing:true});
+  render();scrollChat();
+
+  try{
+    const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key='+GEMINI_KEY;
+    const res=await fetch(url,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:apiMessages,generationConfig:{maxOutputTokens:1024,temperature:0.7}})
+    });
+    const data=await res.json();
+    // Eliminar el mensaje "pensando"
+    chatMessages=chatMessages.filter(m=>!m.typing);
+    if(data.candidates&&data.candidates[0]?.content?.parts?.[0]?.text){
+      chatMessages.push({role:'ai',text:data.candidates[0].content.parts[0].text});
+    }else if(data.error){
+      chatMessages.push({role:'ai',text:'Error de la API: '+(data.error.message||'Error desconocido')});
+    }else{
+      chatMessages.push({role:'ai',text:'No he podido generar una respuesta. Inténtalo de nuevo.'});
+    }
+  }catch(e){
+    chatMessages=chatMessages.filter(m=>!m.typing);
+    chatMessages.push({role:'ai',text:'Error de conexión: '+e.message});
+  }
+  render();scrollChat();
+}
+
+function scrollChat(){
+  setTimeout(()=>{const el=document.getElementById('chat-msgs');if(el)el.scrollTop=el.scrollHeight},100);
+}
+
+function buildContext(){
+  let ctx='';
+  // Personal
+  ctx+='PERSONAL ('+ST.personnel.length+' efectivos):\n';
+  Object.entries(GROUPS).forEach(([k,v])=>{
+    const members=ST.personnel.filter(p=>p.group===k);
+    ctx+=v.label+' ('+members.length+'): '+members.map(p=>p.name+(p.driver?' [conductor]':'')).join(', ')+'\n';
+  });
+  // FAQs aprobadas
+  const approvedFaqs=ST.faqs.filter(f=>f.approved);
+  if(approvedFaqs.length){
+    ctx+='\nPREGUNTAS FRECUENTES:\n';
+    approvedFaqs.forEach(f=>{ctx+='P: '+f.question+'\nR: '+f.answer+'\n\n'});
+  }
+  // Incidencias abiertas
+  const openInc=ST.incidents.filter(i=>i.status!=='resuelta');
+  if(openInc.length){
+    ctx+='\nINCIDENCIAS ACTIVAS:\n';
+    openInc.forEach(i=>{ctx+='- '+i.title+' ['+i.category+'] ('+i.status+') Asignada: '+(i.assignedTo||'sin asignar')+'\n'});
+  }
+  // Tareas pendientes
+  const pendTasks=ST.tasks.filter(t=>t.status!=='completada');
+  if(pendTasks.length){
+    ctx+='\nTAREAS PENDIENTES:\n';
+    pendTasks.forEach(t=>{ctx+='- '+t.title+' ['+t.priority+'] ('+t.status+')\n'});
+  }
+  // Rutas
+  if(ST.routes.length){
+    ctx+='\nRUTAS DE CONDUCCIÓN:\n';
+    ST.routes.forEach(r=>{ctx+='- '+r.name+': '+r.description+' ('+r.distance+', '+r.difficulty+')\n'});
+  }
+  // Guía de despliegue (resumen)
+  ctx+='\nPROCEDIMIENTO DE APERTURA: '+GUIDE_APERTURA.length+' pasos. Incluye nivelación, despliegue de petacas, montaje de barandillas y escaleras.\n';
+  ctx+='PROCEDIMIENTO DE CIERRE: '+GUIDE_CIERRE.length+' pasos. Proceso inverso al de apertura.\n';
+  ctx+='CONSIDERACIONES: '+CONSIDERACIONES.join(' | ')+'\n';
+  return ctx;
+}
+
+// ═══════════ TAB: SALIDAS DEL VEHÍCULO ═══════════
+let salidaFilter='all';
+function rSal(){
+  const ed=can('createSalidas');
+  const sals=salidaFilter==='all'?ST.salidas:ST.salidas.filter(s=>s.estado===salidaFilter);
+  const counts={all:ST.salidas.length,en_ruta:ST.salidas.filter(s=>s.estado==='en_ruta').length,finalizada:ST.salidas.filter(s=>s.estado==='finalizada').length};
+  // Stats
+  const totalKm=ST.salidas.filter(s=>s.kmFin>0).reduce((a,s)=>a+(s.kmFin-s.kmInicio),0);
+  const totalL=ST.repostajes.reduce((a,r)=>a+r.litros,0);
+  const consumo=totalKm>0&&totalL>0?Math.round((totalL/totalKm)*100*10)/10:0;
+
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Registro de salidas del vehículo</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addSalida\';ST.formData={};render()">+ Registrar salida</button>':'')+'</div>';
+  // Summary cards
+  h+='<div class="stats-grid" style="margin-bottom:16px"><div class="stat-card"><span class="label">Km totales</span><span class="value">'+totalKm.toLocaleString('es-ES')+'</span></div><div class="stat-card"><span class="label">Litros</span><span class="value">'+totalL.toLocaleString('es-ES')+'</span></div><div class="stat-card"><span class="label">Consumo medio</span><span class="value">'+(consumo?consumo+' L/100':'—')+'</span></div><div class="stat-card"><span class="label">En ruta</span><span class="value" style="color:#E8A817">'+counts.en_ruta+'</span></div></div>';
+  // Filters
+  h+='<div class="filter-bar">';
+  [['all','Todas ('+counts.all+')'],['en_ruta','En ruta ('+counts.en_ruta+')'],['finalizada','Finalizadas ('+counts.finalizada+')']].forEach(([k,l])=>{
+    h+='<span class="filter-chip '+(salidaFilter===k?'active':'')+'" onclick="salidaFilter=\''+k+'\';render()">'+l+'</span>';
+  });h+='</div>';
+  if(!sals.length)h+='<div class="empty">'+(ST.salidas.length?'No hay salidas con ese filtro.':'Sin salidas registradas.')+'</div>';
+  else sals.sort((a,b)=>b.fechaSalida>a.fechaSalida?1:-1).forEach(s=>{
+    const kmRecorridos=s.kmFin>0?(s.kmFin-s.kmInicio):0;
+    const repos=ST.repostajes.filter(r=>r.salidaId===s.id);
+    h+='<div class="salida-card '+s.estado+'" onclick="ST.modal={type:\'viewSalida\',id:\''+s.id+'\'};render()">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
+    h+='<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700;margin-bottom:4px">'+esc(s.origen)+' → '+esc(s.destino)+'</div>';
+    h+='<div style="font-size:13px;color:#666">'+esc(s.motivo)+'</div></div>';
+    h+='<span class="status-badge '+s.estado+'">'+s.estado.replace('_',' ')+'</span></div>';
+    h+='<div class="tc-meta" style="margin-top:6px"><span>Conductor: '+esc(s.conductorNombre)+'</span>';
+    h+='<span><span class="km-badge">'+s.kmInicio+' km</span>'+(s.kmFin>0?' → <span class="km-badge">'+s.kmFin+' km</span> ('+kmRecorridos+' km)':'')+'</span>';
+    if(repos.length)h+='<span class="fuel-badge">⛽ '+repos.reduce((a,r)=>a+r.litros,0)+' L</span>';
+    h+='<span>'+fmtDT(s.fechaSalida)+'</span></div></div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ SALIDA & MANUAL MODALS ═══════════
+const _origRMod4=rMod;
+rMod=function(){
+  const m=ST.modal;
+
+  // ── Add Salida ──
+  if(m==='addSalida'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar salida del vehículo</h3>'+
+      '<div class="field"><label>Conductor</label><select id="ms-cond">'+ST.personnel.filter(p=>p.driver).map(p=>'<option value="'+p.id+'" '+(p.id===(currentUser.personaId||'')?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field" style="flex:1;min-width:120px"><label>Origen</label><input type="text" id="ms-origen" value="Base Litoral"></div>'+
+      '<div class="field" style="flex:1;min-width:120px"><label>Destino</label><input type="text" id="ms-destino"></div></div>'+
+      '<div class="field"><label>Motivo de la salida</label><input type="text" id="ms-motivo" placeholder="ej: Prácticas, servicio, traslado..."></div>'+
+      '<div class="field"><label>Kilómetros de inicio</label><input type="text" id="ms-kmi" placeholder="ej: 45230" inputmode="numeric"></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitSalida()">Registrar salida</button></div></div></div>';
+  }
+
+  // ── View Salida ──
+  if(m?.type==='viewSalida'){
+    const s=ST.salidas.find(x=>x.id===m.id);if(!s)return'';
+    const repos=ST.repostajes.filter(r=>r.salidaId===s.id).sort((a,b)=>a.fecha>b.fecha?1:-1);
+    const kmRec=s.kmFin>0?(s.kmFin-s.kmInicio):0;
+    const ed=can('editSalidas')||can('createSalidas');
+    let i='<h3>'+esc(s.origen)+' → '+esc(s.destino)+'</h3>';
+    i+='<span class="status-badge '+s.estado+'" style="margin-bottom:12px;display:inline-block">'+s.estado.replace('_',' ')+'</span>';
+    i+='<div style="font-size:13px;color:#888;margin-bottom:12px;line-height:1.8">';
+    i+='<div>Conductor: <strong>'+esc(s.conductorNombre)+'</strong></div>';
+    i+='<div>Motivo: <strong>'+esc(s.motivo)+'</strong></div>';
+    i+='<div>Km inicio: <span class="km-badge">'+s.kmInicio+'</span>'+(s.kmFin>0?' → Km fin: <span class="km-badge">'+s.kmFin+'</span> (<strong>'+kmRec+' km</strong> recorridos)':'')+'</div>';
+    i+='<div>Salida: '+fmtDT(s.fechaSalida)+'</div>';
+    if(s.fechaLlegada)i+='<div>Llegada: '+fmtDT(s.fechaLlegada)+'</div>';
+    if(s.comentarios)i+='<div>Comentarios: '+esc(s.comentarios)+'</div>';
+    i+='</div>';
+    // Repostajes
+    i+='<h4 style="font-size:13px;font-weight:700;margin:16px 0 8px;text-transform:uppercase;color:#999">Repostajes ('+repos.length+')</h4>';
+    if(repos.length){repos.forEach(r=>{
+      i+='<div style="padding:8px 12px;background:#F8F8FA;border-radius:8px;margin-bottom:6px;font-size:13px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px"><span class="fuel-badge">⛽ '+r.litros+' L</span><span class="km-badge">'+r.km+' km</span></div>';
+      if(r.ubicacion)i+='<div style="color:#888;margin-top:4px;font-size:12px">📍 '+esc(r.ubicacion)+'</div>';
+      i+='<div style="color:#999;font-size:11px;margin-top:2px">'+fmtDT(r.fecha)+'</div></div>';
+    })}
+    // Actions
+    if(ed&&s.estado==='en_ruta'){
+      i+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
+      i+='<button class="btn btn-sm" onclick="ST.modal={type:\'addRepostaje\',salidaId:\''+s.id+'\'};render()">⛽ Registrar repostaje</button>';
+      i+='<button class="btn btn-success" onclick="ST.modal={type:\'cerrarSalida\',id:\''+s.id+'\'};render()">Registrar llegada</button>';
+      i+='</div>';
+    }
+    if(can('editSalidas'))i+='<div style="margin-top:8px"><button class="btn-danger" onclick="deleteSalida(\''+s.id+'\')">Eliminar registro</button></div>';
+    i+='<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" style="max-width:560px" onclick="event.stopPropagation()">'+i+'</div></div>';
+  }
+
+  // ── Add Repostaje ──
+  if(m?.type==='addRepostaje'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar repostaje</h3>'+
+      '<div class="field"><label>Kilómetros actuales</label><input type="text" id="mr-km" inputmode="numeric" placeholder="ej: 45350"></div>'+
+      '<div class="field"><label>Litros repostados</label><input type="text" id="mr-litros" inputmode="decimal" placeholder="ej: 65.5"></div>'+
+      '<div class="field"><label>Ubicación</label><input type="text" id="mr-ubic" placeholder="Detectando ubicación..."><button class="btn btn-sm" onclick="detectarUbicacion()" style="margin-top:6px">📍 Obtener ubicación automática</button></div>'+
+      '<input type="hidden" id="mr-lat" value=""><input type="hidden" id="mr-lng" value="">'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="ST.modal={type:\'viewSalida\',id:\''+m.salidaId+'\'};render()">Cancelar</button><button class="btn btn-primary" onclick="submitRepostaje(\''+m.salidaId+'\')">Registrar</button></div></div></div>';
+  }
+
+  // ── Cerrar Salida ──
+  if(m?.type==='cerrarSalida'){
+    const s=ST.salidas.find(x=>x.id===m.id);
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar llegada a base</h3>'+
+      '<p style="font-size:14px;color:#666;margin:0 0 16px">'+esc(s?.origen||'')+' → '+esc(s?.destino||'')+'</p>'+
+      '<div class="field"><label>Kilómetros de llegada</label><input type="text" id="mc-kmfin" inputmode="numeric" placeholder="ej: 45380"></div>'+
+      '<div class="field"><label>Incidencias o comentarios</label><textarea id="mc-comments" rows="3" placeholder="Cualquier observación del trayecto..."></textarea></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="ST.modal={type:\'viewSalida\',id:\''+m.id+'\'};render()">Cancelar</button><button class="btn btn-success" onclick="cerrarSalida(\''+m.id+'\')">Finalizar salida</button></div></div></div>';
+  }
+
+  // ── Add Manual (Drive link) ──
+  if(m==='addManual'){
+    const fd=ST.formData;
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Añadir documento</h3>'+
+      '<div class="field"><label>Nombre del documento</label><input type="text" id="mm-name" placeholder="ej: Manual de comunicaciones"></div>'+
+      '<div class="field"><label>URL (Google Drive, web, etc.)</label><input type="url" id="mm-url" placeholder="https://drive.google.com/file/d/..."></div>'+
+      '<div class="field"><label>Carpeta</label><select id="mm-folder">'+ST.folders.map(f=>'<option value="'+f.id+'" '+(fd.folder===f.id?'selected':'')+'>'+esc(f.name)+'</option>').join('')+'</select></div>'+
+      '<div class="field"><label>Tipo</label><select id="mm-tipo"><option value="drive">Documento Google Drive</option><option value="pdf">PDF web</option><option value="web">Página web</option></select></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitManual()">Añadir</button></div></div></div>';
+  }
+
+  return _origRMod4();
+};
+
+// ═══════════ SALIDA ACTIONS ═══════════
+async function submitSalida(){
+  const condId=document.getElementById('ms-cond').value;
+  const condName=ST.personnel.find(p=>p.id===condId)?.name||'';
+  const origen=document.getElementById('ms-origen').value.trim();
+  const destino=document.getElementById('ms-destino').value.trim();
+  const motivo=document.getElementById('ms-motivo').value.trim();
+  const kmI=parseInt(document.getElementById('ms-kmi').value)||0;
+  if(!condId||!destino||!kmI){toast('Conductor, destino y km de inicio son obligatorios');return}
+  const salida={id:'sal-'+Date.now(),conductorId:condId,conductorNombre:condName,origen:origen||'Base Litoral',destino,motivo,kmInicio:kmI,kmFin:0,estado:'en_ruta',comentarios:'',fechaSalida:new Date().toISOString(),fechaLlegada:''};
+  ST.salidas.push(salida);cacheLocal();await cloud('saveSalida',{salida});ST.modal=null;render();toast('Salida registrada');
+}
+
+async function cerrarSalida(id){
+  const s=ST.salidas.find(x=>x.id===id);if(!s)return;
+  const kmFin=parseInt(document.getElementById('mc-kmfin').value)||0;
+  const comments=document.getElementById('mc-comments').value.trim();
+  if(!kmFin){toast('Introduce los km de llegada');return}
+  if(kmFin<s.kmInicio){toast('Los km de llegada deben ser mayores que los de salida');return}
+  s.kmFin=kmFin;s.estado='finalizada';s.comentarios=comments;s.fechaLlegada=new Date().toISOString();
+  cacheLocal();await cloud('saveSalida',{salida:s});ST.modal={type:'viewSalida',id};render();toast('Salida finalizada');
+}
+
+async function deleteSalida(id){
+  ST.salidas=ST.salidas.filter(s=>s.id!==id);ST.repostajes=ST.repostajes.filter(r=>r.salidaId!==id);
+  cacheLocal();await cloud('deleteSalida',{id});ST.modal=null;render();toast('Registro eliminado');
+}
+
+async function submitRepostaje(salidaId){
+  const km=parseInt(document.getElementById('mr-km').value)||0;
+  const litros=parseFloat(document.getElementById('mr-litros').value)||0;
+  const ubic=document.getElementById('mr-ubic').value.trim();
+  const lat=document.getElementById('mr-lat').value;
+  const lng=document.getElementById('mr-lng').value;
+  if(!km||!litros){toast('Kilómetros y litros son obligatorios');return}
+  const repo={id:'rep-'+Date.now(),salidaId,km,litros,ubicacion:ubic,lat:lat||'',lng:lng||'',fecha:new Date().toISOString()};
+  ST.repostajes.push(repo);cacheLocal();await cloud('addRepostaje',{repostaje:repo});
+  ST.modal={type:'viewSalida',id:salidaId};render();toast('Repostaje registrado');
+}
+
+function detectarUbicacion(){
+  if(!navigator.geolocation){toast('Geolocalización no disponible');return}
+  toast('Obteniendo ubicación...');
+  navigator.geolocation.getCurrentPosition(
+    async function(pos){
+      const lat=pos.coords.latitude;const lng=pos.coords.longitude;
+      document.getElementById('mr-lat').value=lat;
+      document.getElementById('mr-lng').value=lng;
+      // Reverse geocoding via Nominatim (free)
+      try{
+        const r=await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lng+'&zoom=16');
+        const d=await r.json();
+        const addr=d.display_name||(''+lat.toFixed(4)+', '+lng.toFixed(4));
+        document.getElementById('mr-ubic').value=addr.split(',').slice(0,3).join(',');
+      }catch(e){document.getElementById('mr-ubic').value=lat.toFixed(5)+', '+lng.toFixed(5)}
+      toast('Ubicación obtenida');
+    },
+    function(err){toast('Error de ubicación: '+err.message);document.getElementById('mr-ubic').value='No disponible'},
+    {enableHighAccuracy:true,timeout:10000}
+  );
+}
+
+// ═══════════ MANUAL ACTIONS (Drive links) ═══════════
+async function submitManual(){
+  const name=document.getElementById('mm-name').value.trim();
+  const url=document.getElementById('mm-url').value.trim();
+  const folder=document.getElementById('mm-folder').value;
+  const tipo=document.getElementById('mm-tipo').value;
+  if(!name||!url){toast('Nombre y URL son obligatorios');return}
+  const manual={id:'man-'+Date.now(),name,folder,url,tipo,date:new Date().toISOString(),uploadedBy:currentUser.name};
+  ST.manuals.push(manual);cacheLocal();await cloud('saveManual',{manual});ST.modal=null;render();toast('Documento añadido');
+}
+async function deleteManual(id){
+  ST.manuals=ST.manuals.filter(m=>m.id!==id);cacheLocal();await cloud('deleteManual',{id});render();toast('Documento eliminado');
+}
+
+// ═══════════ ARRANQUE ═══════════
+(function(){
+  const saved=localStorage.getItem('pma3_session');
+  if(saved){try{currentUser=JSON.parse(saved)}catch(e){}}
+  if(currentUser){loadData()}else{renderLogin()}
+})();
+</script>
+</body>
+</html>
