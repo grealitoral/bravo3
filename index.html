@@ -251,7 +251,7 @@ function renderLogin(){
       <div class="login-error" id="login-error"></div>
       <div class="field"><label>Usuario</label><input type="text" id="login-user" placeholder="Nombre de usuario" autocomplete="username"></div>
       <div class="field"><label>Contraseña</label><input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;padding:12px" onclick="doLogin()">Acceder</button>
+      <button id="login-btn" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;padding:12px" onclick="doLogin()">Acceder</button>
       <p style="text-align:center;font-size:11px;color:var(--text3);margin-top:16px">Los datos se sincronizan con Google Sheets</p>
     </div>
   </div>`;
@@ -261,16 +261,21 @@ async function doLogin(){
   const user=document.getElementById('login-user').value.trim();
   const pass=document.getElementById('login-pass').value;
   const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('login-btn');
   if(!user||!pass){errEl.textContent='Introduce usuario y contraseña';errEl.style.display='block';return}
   if(!apiOk()){errEl.textContent='API no configurada';errEl.style.display='block';return}
+  // Mostrar estado de carga
+  errEl.style.display='none';
+  btn.disabled=true;
+  btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px"></span>Conectando...';
   try{
-    errEl.style.display='none';
     const res=await apiGet({action:'login',user:user,pass:pass});
-    if(res.error){errEl.textContent=res.error;errEl.style.display='block';return}
+    if(res.error){errEl.textContent=res.error;errEl.style.display='block';btn.disabled=false;btn.textContent='Acceder';return}
+    btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px"></span>Cargando datos...';
     currentUser=res.user;
     localStorage.setItem('pma3_session',JSON.stringify(currentUser));
     await loadData();
-  }catch(e){errEl.textContent='Error de conexión: '+e.message;errEl.style.display='block'}
+  }catch(e){errEl.textContent='Error de conexión: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Acceder'}
 }
 
 function doLogout(){
