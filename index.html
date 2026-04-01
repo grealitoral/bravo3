@@ -41,7 +41,8 @@ header{display:flex;justify-content:space-between;align-items:center;padding:20p
 .sync-badge{font-size:10px;font-weight:600;padding:4px 10px;border-radius:12px;display:inline-flex;align-items:center;gap:4px}
 .sync-badge.ok{background:#EAF3DE;color:#3B6D11}.sync-badge.loading{background:#FEF7E0;color:#854F0B;animation:pulse 1.5s infinite}.sync-badge.error{background:#FCEBEB;color:#A32D2D}.sync-badge.local{background:#F4F5F7;color:#666}
 
-nav{display:flex;gap:2px;padding:12px 0;border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+nav{display:flex;gap:2px;padding:12px 0;border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#CCC transparent;position:relative}nav::-webkit-scrollbar{height:4px}nav::-webkit-scrollbar-track{background:transparent}nav::-webkit-scrollbar-thumb{background:#CCC;border-radius:2px}nav::-webkit-scrollbar-thumb:hover{background:#AAA}
+@media(min-width:800px){nav{padding:12px 24px 12px 0;mask-image:linear-gradient(to right,black 92%,transparent 100%);-webkit-mask-image:linear-gradient(to right,black 92%,transparent 100%)}}
 .nav-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:none;background:transparent;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;font-family:inherit}.nav-btn:hover{background:#F0F0F0;color:#555}.nav-btn.active{background:var(--navy);color:#fff}.nav-btn svg{width:16px;height:16px;flex-shrink:0}
 main{flex:1;padding:20px 0}.section{animation:fadeIn .3s ease}
 .field{margin-bottom:14px}.field label{display:block;font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
@@ -132,7 +133,7 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACION
 // ══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbzUWjX_YgMsM7GrrZezxVUKxpyfx5lF4LqbhOj2iCxpKkzL-n3IcXeaaZAJ9DXiMNkhqg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyD1OjH-GKPLgcHXCBZPVoZq6qJaKHOhIXfXDqMHxF5zFkzDbPqt-RUc3lxhZ25Jj5tgw/exec';
 // ══════════════════════════════════════════════════════════════
 
 // ── API (JSONP para GET, iframe para POST — evita CORS) ──
@@ -432,7 +433,7 @@ function rUsr(){if(!can('manageUsers'))return'<div class="no-access"><h3>Sin acc
 function rMod(){const m=ST.modal;let i='';
   if(m==='userMenu')i='<h3>'+esc(currentUser.name)+'</h3><p style="font-size:13px;color:#888;margin:0 0 16px"><span class="role-badge '+currentUser.rol+'">'+(ROLES[currentUser.rol]?.label||currentUser.rol)+'</span></p><button class="btn btn-sm" style="width:100%;justify-content:center;margin-bottom:8px" onclick="ST.modal=\'changePass\';render()">Cambiar contraseña</button><button class="btn btn-sm" style="width:100%;justify-content:center;margin-bottom:8px;color:#E24B4A;border-color:#F5C0D1" onclick="doLogout()">Cerrar sesión</button><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
   else if(m==='changePass')i='<h3>Cambiar contraseña</h3><div class="field"><label>Contraseña actual</label><input type="password" id="m-oldpass"></div><div class="field"><label>Nueva contraseña</label><input type="password" id="m-newpass"></div><div class="field"><label>Repetir nueva</label><input type="password" id="m-newpass2"></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="doChangePass()">Cambiar</button></div>';
-  else if(m==='addUser'||m==='editUser'){const editing=m==='editUser';const fd=ST.formData;i='<h3>'+(editing?'Editar':'Añadir')+' usuario</h3><div class="field"><label>Nombre completo</label><input type="text" id="m-uname" value="'+esc(fd.name||'')+'"></div><div class="field"><label>Nombre de usuario</label><input type="text" id="m-uuser" value="'+esc(fd.user||'')+'" '+(editing?'disabled':'')+'></div><div class="field"><label>'+(editing?'Nueva contraseña (dejar vacío para no cambiar)':'Contraseña')+'</label><input type="password" id="m-upass" value="'+esc(fd.password||'')+'"></div><div class="field"><label>Rol</label><select id="m-urol">'+Object.entries(ROLES).map(([k,v])=>'<option value="'+k+'" '+(fd.rol===k?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div><div class="field"><label>Vincular a personal (opcional)</label><select id="m-upersona"><option value="">— Sin vincular —</option>'+ST.personnel.map(p=>'<option value="'+p.id+'" '+(fd.personaId===p.id?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div><div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:14px;cursor:pointer"><input type="checkbox" id="m-uactive" '+(fd.active!==false?'checked':'')+'> Usuario activo</label></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitUser('+(editing?'true':'false')+')">'+( editing?'Guardar':'Crear')+'</button></div>'}
+  else if(m==='addUser'||m==='editUser'){const editing=m==='editUser';const fd=ST.formData;i='<h3>'+(editing?'Editar':'Añadir')+' usuario</h3><div class="field"><label>Nombre completo</label><input type="text" id="m-uname" value="'+esc(fd.name||'')+'"></div><div class="field"><label>Nombre de usuario</label><input type="text" id="m-uuser" value="'+esc(fd.user||'')+'" '+(editing?'disabled':'')+'></div><div class="field"><label>'+(editing?'Nueva contraseña (dejar vacío para no cambiar)':'Contraseña')+'</label><input type="password" id="m-upass" value="'+esc(fd.password||'')+'"></div><div class="field"><label>Email (para notificaciones)</label><input type="text" id="m-uemail" value="'+esc(fd.email||'')+'" placeholder="ejemplo@correo.com"></div><div class="field"><label>Rol</label><select id="m-urol">'+Object.entries(ROLES).map(([k,v])=>'<option value="'+k+'" '+(fd.rol===k?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div><div class="field"><label>Vincular a personal (opcional)</label><select id="m-upersona"><option value="">— Sin vincular —</option>'+ST.personnel.map(p=>'<option value="'+p.id+'" '+(fd.personaId===p.id?'selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div><div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:14px;cursor:pointer"><input type="checkbox" id="m-uactive" '+(fd.active!==false?'checked':'')+'> Usuario activo</label></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitUser('+(editing?'true':'false')+')">'+( editing?'Guardar':'Crear')+'</button></div>'}
   else if(m==='addPerson')i='<h3>Añadir efectivo</h3><div class="field"><label>Nombre</label><input type="text" id="m-name" placeholder="Nombre y apellidos"></div><div class="field"><label>Grupo</label><select id="m-group">'+Object.entries(GROUPS).map(([k,v])=>'<option value="'+k+'" '+((ST.formData.group||'agentes')===k?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div><div class="field"><label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:14px;cursor:pointer"><input type="checkbox" id="m-driver"> Conductor</label></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitPerson()">Añadir</button></div>';
   else if(m==='addVideo')i='<h3>Añadir vídeo</h3><div class="field"><label>Título</label><input type="text" id="m-vtitle"></div><div class="field"><label>URL</label><input type="url" id="m-vurl" placeholder="videos/nombre_del_video.mp4"></div><div class="field"><label>Descripción</label><textarea id="m-vdesc" rows="2"></textarea></div><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitVideo()">Añadir</button></div>';
   else if(m?.type==='confirmDel')i='<h3>Confirmar</h3><p style="font-size:14px;color:#666;margin:0 0 20px">¿Eliminar a <strong>'+m.name+'</strong>?</p><div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" style="background:#D4537E" onclick="removePerson(\''+m.id+'\')">Eliminar</button></div>';
@@ -467,9 +468,9 @@ function playVideo(id){ST.modal={type:'playVideo',id};render()}
 
 // ── Usuarios ──
 function editUser(username){const u=ST.users.find(x=>x.user===username);if(!u)return;ST.formData={...u,password:''};ST.modal='editUser';render()}
-async function submitUser(editing){const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
-  if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active};if(pass)ST.users[idx].password=pass}}
-  else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active})}
+async function submitUser(editing){const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;const email=document.getElementById('m-uemail')?.value.trim()||'';if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
+  if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active,email};if(pass)ST.users[idx].password=pass}}
+  else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active,email})}
   cacheLocal();await cloud('saveUsers',{users:ST.users});ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado')}
 async function doChangePass(){const old=document.getElementById('m-oldpass').value;const np=document.getElementById('m-newpass').value;const np2=document.getElementById('m-newpass2').value;if(!old||!np){toast('Rellena todos los campos');return}if(np!==np2){toast('Las contraseñas no coinciden');return}try{const res=await apiPost({action:'changePassword',user:currentUser.user,oldPass:old,newPass:np});if(res.error){toast(res.error);return}toast('Contraseña cambiada');closeModal()}catch(e){toast('Error: '+e.message)}}
 
@@ -642,7 +643,7 @@ async function submitIncident(){
   const assigned=document.getElementById('mi-assign').value;
   if(!title){toast('El título es obligatorio');return}
   const inc={id:'inc-'+Date.now(),title,description:desc,category:cat,reportedBy:currentUser.user,reportedByName:currentUser.name,assignedTo:assigned,status:'abierta',created:new Date().toISOString()};
-  ST.incidents.push(inc);cacheLocal();await cloud('saveIncident',{incident:inc});
+  ST.incidents.push(inc);cacheLocal();await cloud('saveIncident',{incident:inc,notify:true,notifyType:'nueva'});
   // Handle photos
   const photoInput=document.getElementById('mi-photos');
   if(photoInput&&photoInput.files.length){
@@ -657,7 +658,7 @@ async function submitIncident(){
 }
 function readFileAsDataURL(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(file)})}
 async function changeIncStatus(id,status){
-  const inc=ST.incidents.find(x=>x.id===id);if(!inc)return;inc.status=status;cacheLocal();await cloud('saveIncident',{incident:inc});render();toast('Estado actualizado');
+  const inc=ST.incidents.find(x=>x.id===id);if(!inc)return;inc.status=status;cacheLocal();await cloud('saveIncident',{incident:inc,notify:true,notifyType:status==='resuelta'?'resuelta':'actualizada'});render();toast('Estado actualizado');
 }
 async function deleteIncident(id){
   ST.incidents=ST.incidents.filter(i=>i.id!==id);ST.incidentComments=ST.incidentComments.filter(c=>c.incidentId!==id);ST.incidentPhotos=ST.incidentPhotos.filter(p=>p.incidentId!==id);cacheLocal();await cloud('deleteIncident',{id});ST.modal=null;render();toast('Incidencia eliminada');
@@ -1021,6 +1022,7 @@ rMod=function(){
       '<div class="field" style="flex:1;min-width:120px"><label>Destino</label><input type="text" id="ms-destino"></div></div>'+
       '<div class="field"><label>Motivo de la salida</label><input type="text" id="ms-motivo" placeholder="ej: Prácticas, servicio, traslado..."></div>'+
       '<div class="field"><label>Kilómetros de inicio</label><input type="text" id="ms-kmi" placeholder="ej: 45230" inputmode="numeric"></div>'+
+      '<div class="field"><label>Ubicación de salida</label><input type="text" id="ms-ubic" placeholder="Detectando..."><input type="hidden" id="ms-lat"><input type="hidden" id="ms-lng"><button class="btn btn-sm" onclick="detectarUbicacionCampo(\'ms-ubic\')" style="margin-top:4px">📍 Obtener ubicación</button></div>'+
       '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitSalida()">Registrar salida</button></div></div></div>';
   }
 
@@ -1037,7 +1039,9 @@ rMod=function(){
     i+='<div>Motivo: <strong>'+esc(s.motivo)+'</strong></div>';
     i+='<div>Km inicio: <span class="km-badge">'+s.kmInicio+'</span>'+(s.kmFin>0?' → Km fin: <span class="km-badge">'+s.kmFin+'</span> (<strong>'+kmRec+' km</strong> recorridos)':'')+'</div>';
     i+='<div>Salida: '+fmtDT(s.fechaSalida)+'</div>';
+    if(s.ubicSalida)i+='<div>📍 Ubicación salida: '+esc(s.ubicSalida)+'</div>';
     if(s.fechaLlegada)i+='<div>Llegada: '+fmtDT(s.fechaLlegada)+'</div>';
+    if(s.ubicLlegada)i+='<div>📍 Ubicación llegada: '+esc(s.ubicLlegada)+'</div>';
     if(s.comentarios)i+='<div>Comentarios: '+esc(s.comentarios)+'</div>';
     i+='</div>';
     // Repostajes
@@ -1045,6 +1049,7 @@ rMod=function(){
     if(repos.length){repos.forEach(r=>{
       i+='<div style="padding:8px 12px;background:#F8F8FA;border-radius:8px;margin-bottom:6px;font-size:13px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px"><span class="fuel-badge">⛽ '+r.litros+' L</span><span class="km-badge">'+r.km+' km</span></div>';
       if(r.ubicacion)i+='<div style="color:#888;margin-top:4px;font-size:12px">📍 '+esc(r.ubicacion)+'</div>';
+      if(r.ticketFoto)i+='<div style="margin-top:6px"><img src="'+r.ticketFoto+'" style="max-width:200px;max-height:150px;border-radius:8px;border:1px solid #E4E4E4;cursor:pointer" onclick="window.open(\''+r.ticketFoto+'\',\'_blank\')"></div>';
       i+='<div style="color:#999;font-size:11px;margin-top:2px">'+fmtDT(r.fecha)+'</div></div>';
     })}
     // Actions
@@ -1064,8 +1069,9 @@ rMod=function(){
     return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar repostaje</h3>'+
       '<div class="field"><label>Kilómetros actuales</label><input type="text" id="mr-km" inputmode="numeric" placeholder="ej: 45350"></div>'+
       '<div class="field"><label>Litros repostados</label><input type="text" id="mr-litros" inputmode="decimal" placeholder="ej: 65.5"></div>'+
-      '<div class="field"><label>Ubicación</label><input type="text" id="mr-ubic" placeholder="Detectando ubicación..."><button class="btn btn-sm" onclick="detectarUbicacion()" style="margin-top:6px">📍 Obtener ubicación automática</button></div>'+
+      '<div class="field"><label>Ubicación</label><input type="text" id="mr-ubic" placeholder="Detectando ubicación..."><button class="btn btn-sm" onclick="detectarUbicacionCampo(\'mr-ubic\')" style="margin-top:6px">📍 Obtener ubicación</button></div>'+
       '<input type="hidden" id="mr-lat" value=""><input type="hidden" id="mr-lng" value="">'+
+      '<div class="field"><label>Foto del ticket (opcional)</label><input type="file" id="mr-ticket" accept="image/*"></div>'+
       '<div class="modal-actions"><button class="btn-sm" onclick="ST.modal={type:\'viewSalida\',id:\''+m.salidaId+'\'};render()">Cancelar</button><button class="btn btn-primary" onclick="submitRepostaje(\''+m.salidaId+'\')">Registrar</button></div></div></div>';
   }
 
@@ -1075,6 +1081,7 @@ rMod=function(){
     return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Registrar llegada a base</h3>'+
       '<p style="font-size:14px;color:#666;margin:0 0 16px">'+esc(s?.origen||'')+' → '+esc(s?.destino||'')+'</p>'+
       '<div class="field"><label>Kilómetros de llegada</label><input type="text" id="mc-kmfin" inputmode="numeric" placeholder="ej: 45380"></div>'+
+      '<div class="field"><label>Ubicación de llegada</label><input type="text" id="mc-ubic" placeholder="Detectando..."><button class="btn btn-sm" onclick="detectarUbicacionCampo(\'mc-ubic\')" style="margin-top:4px">📍 Obtener ubicación</button></div>'+
       '<div class="field"><label>Incidencias o comentarios</label><textarea id="mc-comments" rows="3" placeholder="Cualquier observación del trayecto..."></textarea></div>'+
       '<div class="modal-actions"><button class="btn-sm" onclick="ST.modal={type:\'viewSalida\',id:\''+m.id+'\'};render()">Cancelar</button><button class="btn btn-success" onclick="cerrarSalida(\''+m.id+'\')">Finalizar salida</button></div></div></div>';
   }
@@ -1101,8 +1108,9 @@ async function submitSalida(){
   const destino=document.getElementById('ms-destino').value.trim();
   const motivo=document.getElementById('ms-motivo').value.trim();
   const kmI=parseInt(document.getElementById('ms-kmi').value)||0;
+  const ubicSalida=document.getElementById('ms-ubic')?.value.trim()||'';
   if(!condId||!destino||!kmI){toast('Conductor, destino y km de inicio son obligatorios');return}
-  const salida={id:'sal-'+Date.now(),conductorId:condId,conductorNombre:condName,origen:origen||'Base Litoral',destino,motivo,kmInicio:kmI,kmFin:0,estado:'en_ruta',comentarios:'',fechaSalida:new Date().toISOString(),fechaLlegada:''};
+  const salida={id:'sal-'+Date.now(),conductorId:condId,conductorNombre:condName,origen:origen||'Base Litoral',destino,motivo,kmInicio:kmI,kmFin:0,estado:'en_ruta',comentarios:'',fechaSalida:new Date().toISOString(),fechaLlegada:'',ubicSalida:ubicSalida,ubicLlegada:''};
   ST.salidas.push(salida);cacheLocal();await cloud('saveSalida',{salida});ST.modal=null;render();toast('Salida registrada');
 }
 
@@ -1110,9 +1118,10 @@ async function cerrarSalida(id){
   const s=ST.salidas.find(x=>x.id===id);if(!s)return;
   const kmFin=parseInt(document.getElementById('mc-kmfin').value)||0;
   const comments=document.getElementById('mc-comments').value.trim();
+  const ubicLlegada=document.getElementById('mc-ubic')?.value.trim()||'';
   if(!kmFin){toast('Introduce los km de llegada');return}
   if(kmFin<s.kmInicio){toast('Los km de llegada deben ser mayores que los de salida');return}
-  s.kmFin=kmFin;s.estado='finalizada';s.comentarios=comments;s.fechaLlegada=new Date().toISOString();
+  s.kmFin=kmFin;s.estado='finalizada';s.comentarios=comments;s.fechaLlegada=new Date().toISOString();s.ubicLlegada=ubicLlegada;
   cacheLocal();await cloud('saveSalida',{salida:s});ST.modal={type:'viewSalida',id};render();toast('Salida finalizada');
 }
 
@@ -1128,29 +1137,37 @@ async function submitRepostaje(salidaId){
   const lat=document.getElementById('mr-lat').value;
   const lng=document.getElementById('mr-lng').value;
   if(!km||!litros){toast('Kilómetros y litros son obligatorios');return}
-  const repo={id:'rep-'+Date.now(),salidaId,km,litros,ubicacion:ubic,lat:lat||'',lng:lng||'',fecha:new Date().toISOString()};
+  let ticketFoto='';
+  const ticketInput=document.getElementById('mr-ticket');
+  if(ticketInput&&ticketInput.files.length){
+    ticketFoto=await readFileAsDataURL(ticketInput.files[0]);
+  }
+  const repo={id:'rep-'+Date.now(),salidaId,km,litros,ubicacion:ubic,lat:lat||'',lng:lng||'',fecha:new Date().toISOString(),ticketFoto};
   ST.repostajes.push(repo);cacheLocal();await cloud('addRepostaje',{repostaje:repo});
   ST.modal={type:'viewSalida',id:salidaId};render();toast('Repostaje registrado');
 }
 
-function detectarUbicacion(){
+function detectarUbicacionCampo(fieldId){
   if(!navigator.geolocation){toast('Geolocalización no disponible');return}
   toast('Obteniendo ubicación...');
   navigator.geolocation.getCurrentPosition(
     async function(pos){
       const lat=pos.coords.latitude;const lng=pos.coords.longitude;
-      document.getElementById('mr-lat').value=lat;
-      document.getElementById('mr-lng').value=lng;
-      // Reverse geocoding via Nominatim (free)
+      // Set hidden fields if they exist with matching prefix
+      const prefix=fieldId.split('-')[0]+'-';
+      const latEl=document.getElementById(prefix+'lat');
+      const lngEl=document.getElementById(prefix+'lng');
+      if(latEl)latEl.value=lat;
+      if(lngEl)lngEl.value=lng;
       try{
         const r=await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lng+'&zoom=16');
         const d=await r.json();
         const addr=d.display_name||(''+lat.toFixed(4)+', '+lng.toFixed(4));
-        document.getElementById('mr-ubic').value=addr.split(',').slice(0,3).join(',');
-      }catch(e){document.getElementById('mr-ubic').value=lat.toFixed(5)+', '+lng.toFixed(5)}
+        document.getElementById(fieldId).value=addr.split(',').slice(0,3).join(',');
+      }catch(e){document.getElementById(fieldId).value=lat.toFixed(5)+', '+lng.toFixed(5)}
       toast('Ubicación obtenida');
     },
-    function(err){toast('Error de ubicación: '+err.message);document.getElementById('mr-ubic').value='No disponible'},
+    function(err){toast('Error: '+err.message);document.getElementById(fieldId).value='No disponible'},
     {enableHighAccuracy:true,timeout:10000}
   );
 }
