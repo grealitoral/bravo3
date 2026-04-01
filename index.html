@@ -133,7 +133,7 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACION
 // ══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbwtTGPhPY0gCRVGjPyPb9BuPwChUnFrRrMAe9ITjFid_uVzPWFLMdjMTNYmqblyiAUenQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxI6Kb7BVPlAC6lAIn6FO1OIrz_6vxUVqDZ1RXLyDaqjrP6NU4n3FdQ4otdpITcJ5D4/exec';
 // ══════════════════════════════════════════════════════════════
 
 // ── API (JSONP para GET, iframe para POST — evita CORS) ──
@@ -181,7 +181,7 @@ function can(action){
   if(!currentUser)return false;
   const r=currentUser.rol;
   const perms={
-    editRecords:['admin','art'],editGuides:['admin','art'],
+    editRecords:['admin','art'],editGuides:['admin','art','agente'],
     createTasks:['admin','art'],editTasks:['admin','art'],
     createIncidents:['admin','art','conductor'],editIncidents:['admin','art'],
     createSalidas:['admin','art','conductor'],editSalidas:['admin','art'],
@@ -210,7 +210,7 @@ const CONSIDERACIONES=["Magnetotérmico «HIDRÁULICA» siempre subido.","Nivela
 
 // ── ESTADO ──
 let currentUser=null;
-let ST={personnel:[],records:{},videos:[],guideLogs:[],users:[],pdfs:[],tasks:[],taskComments:[],incidents:[],incidentComments:[],incidentPhotos:[],routes:[],routeLogs:[],folders:[],manuals:[],faqs:[],salidas:[],repostajes:[],tab:"guia",selDate:new Date().toISOString().slice(0,10),selGroup:"all",guideMode:null,guideStep:-1,guideConfirmed:{},guideResponsible:"",guideGenerator:"",modal:null,formData:{}};
+let ST={personnel:[],records:{},videos:[],guideLogs:[],users:[],pdfs:[],tasks:[],taskComments:[],incidents:[],incidentComments:[],incidentPhotos:[],routes:[],routeLogs:[],folders:[],manuals:[],faqs:[],salidas:[],repostajes:[],loginLogs:[],tab:"guia",selDate:new Date().toISOString().slice(0,10),selGroup:"all",guideMode:null,guideStep:-1,guideConfirmed:{},guideResponsible:"",guideGenerator:"",modal:null,formData:{}};
 
 // ── CARGA ──
 async function loadData(){
@@ -219,7 +219,7 @@ async function loadData(){
     ST.personnel=d.personnel||[];ST.records=d.records||{};ST.guideLogs=d.guideLogs||[];ST.videos=d.videos||[];ST.users=d.users||[];
     ST.tasks=d.tasks||[];ST.taskComments=d.taskComments||[];ST.incidents=d.incidents||[];ST.incidentComments=d.incidentComments||[];ST.incidentPhotos=d.incidentPhotos||[];
     ST.routes=d.routes||[];ST.routeLogs=d.routeLogs||[];ST.folders=d.folders||[];ST.manuals=d.manuals||[];ST.faqs=d.faqs||[];
-    ST.salidas=d.salidas||[];ST.repostajes=d.repostajes||[];
+    ST.salidas=d.salidas||[];ST.repostajes=d.repostajes||[];ST.loginLogs=d.loginLogs||[];
     try{const lp=localStorage.getItem('pma3_pdfs');if(lp)ST.pdfs=JSON.parse(lp)}catch(e){}
     cacheLocal();setSS('ok');render();
   }catch(e){console.warn('API error:',e);setSS('error');loadLocal();render()}
@@ -230,6 +230,10 @@ function cacheLocal(){try{const save={...ST};delete save.pdfs;localStorage.setIt
 // ── CLOUD OPS ──
 async function cloud(action,data){if(!apiOk())return;setSS('loading');try{await apiPost({action,...data});setSS('ok')}catch(e){setSS('error')}}
 
+
+// ── Button loading helper ──
+function btnLoad(btn,text){if(!btn)return;btn.disabled=true;btn.dataset.origText=btn.textContent;btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top:2px solid currentColor;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px"></span>'+(text||'Procesando...')}
+function btnReset(btn){if(!btn)return;btn.disabled=false;btn.textContent=btn.dataset.origText||'Enviar'}
 // ── UTILS ──
 function fmtDate(d){if(!d)return'';const[y,m,day]=d.split("-");return day+"/"+m+"/"+y}
 function fmtDT(iso){if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}
@@ -274,6 +278,7 @@ async function doLogin(){
     btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px"></span>Cargando datos...';
     currentUser=res.user;
     localStorage.setItem('pma3_session',JSON.stringify(currentUser));
+    cloud('addLoginLog',{log:{user:currentUser.user,name:currentUser.name,rol:currentUser.rol,fecha:new Date().toISOString(),userAgent:navigator.userAgent.slice(0,100)}});
     await loadData();
   }catch(e){errEl.textContent='Error de conexión: '+e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Acceder'}
 }
@@ -306,6 +311,7 @@ function render(){
     {key:"estadisticas",label:"Estadísticas",icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"personal",label:"Personal",icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"usuarios",label:"Usuarios",icon:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',roles:['admin','art']},
+    {key:"auditoria",label:"Auditoría",icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',roles:['admin']},
   ];
   const tabs=allTabs.filter(t=>t.roles.includes(r));
   if(!tabs.find(t=>t.key===ST.tab))ST.tab=tabs[0]?.key||'registro';
@@ -316,7 +322,7 @@ function render(){
     <span class="user-pill" onclick="ST.modal='userMenu';render()"><span class="role-dot ${r}"></span>${esc(currentUser.name)}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div></header>`;
   h+=`<nav>${tabs.map(t=>`<button class="nav-btn ${ST.tab===t.key?'active':''}" onclick="switchTab('${t.key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg><span>${t.label}</span></button>`).join('')}</nav><main>`;
 
-  const renderers={registro:rReg,historial:rHis,estadisticas:rSta,guia:rGui,manuales:rMan,videos:rVid,personal:rPer,usuarios:rUsr,tareas:rTar,incidencias:rInc,rutas:rRut,faqs:rFaq,chat:rChat,salidas:rSal};
+  const renderers={registro:rReg,historial:rHis,estadisticas:rSta,guia:rGui,manuales:rMan,videos:rVid,personal:rPer,usuarios:rUsr,tareas:rTar,incidencias:rInc,rutas:rRut,faqs:rFaq,chat:rChat,salidas:rSal,auditoria:rAud};
   h+=(renderers[ST.tab]||rReg)();
   h+='</main><footer>BASE LITORAL | BRAVO3 · '+esc(rolLabel)+' · Datos sincronizados con Google Sheets</footer>';
   if(ST.modal)h+=rMod();
@@ -473,7 +479,7 @@ function playVideo(id){ST.modal={type:'playVideo',id};render()}
 
 // ── Usuarios ──
 function editUser(username){const u=ST.users.find(x=>x.user===username);if(!u)return;ST.formData={...u,password:''};ST.modal='editUser';render()}
-async function submitUser(editing){const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;const email=document.getElementById('m-uemail')?.value.trim()||'';if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
+async function submitUser(editing){const _btn=event?.target;btnLoad(_btn,editing?'Guardando...':'Creando...');const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;const email=document.getElementById('m-uemail')?.value.trim()||'';if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
   if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active,email};if(pass)ST.users[idx].password=pass}}
   else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active,email})}
   cacheLocal();await cloud('saveUsers',{users:ST.users});ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado')}
@@ -569,7 +575,7 @@ rMod=function(){
     if(ed){
       i+='<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap"><label>Estado:</label><select id="mt-status" onchange="changeTaskStatus(\''+t.id+'\',this.value)">';
       ['pendiente','en_curso','completada'].forEach(s=>{i+='<option value="'+s+'" '+(t.status===s?'selected':'')+'>'+s.replace('_',' ')+'</option>'});
-      i+='</select>'+'<button class="btn-danger" onclick="deleteTask(\''+t.id+'\')">Eliminar tarea</button></div>';
+      i+='</select><button class="btn btn-sm" onclick="editTaskModal(\''+t.id+'\')">Editar</button><button class="btn-danger" onclick="deleteTask(\''+t.id+'\')">Eliminar</button></div>';
     }
     i+='<h4 style="font-size:13px;font-weight:700;margin:16px 0 8px;text-transform:uppercase;color:#999">Comentarios ('+comments.length+')</h4>';
     if(comments.length){i+='<div class="comment-box">';comments.forEach(c=>{i+='<div class="comment-item"><span class="comment-author">'+esc(c.authorName)+'</span><span class="comment-date">'+fmtDT(c.date)+'</span><p style="margin:4px 0 0;font-size:13px;color:#444">'+esc(c.text)+'</p></div>'});i+='</div>'}
@@ -616,13 +622,14 @@ rMod=function(){
 
 // ═══════════ TASK ACTIONS ═══════════
 async function submitTask(){
+  const _btn=event?.target;btnLoad(_btn,'Creando...');
   const title=document.getElementById('mt-title').value.trim();
   const desc=document.getElementById('mt-desc').value.trim();
   const sel=document.getElementById('mt-assign');
   const assigned=Array.from(sel.selectedOptions).map(o=>o.value).join(',');
   const prio=document.getElementById('mt-prio').value;
   const deadline=document.getElementById('mt-deadline').value;
-  if(!title){toast('El título es obligatorio');return}
+  if(!title){toast('El título es obligatorio');btnReset(_btn);return}
   const task={id:'task-'+Date.now(),title,description:desc,createdBy:currentUser.user,assignedTo:assigned,deadline,priority:prio,status:'pendiente',created:new Date().toISOString()};
   ST.tasks.push(task);cacheLocal();await cloud('saveTask',{task,notify:true,notifyType:'nueva'});ST.modal=null;render();toast('Tarea creada — notificación enviada');
 }
@@ -642,11 +649,12 @@ async function addTaskComment(taskId){
 
 // ═══════════ INCIDENT ACTIONS ═══════════
 async function submitIncident(){
+  const _btn=event?.target;btnLoad(_btn,'Creando...');
   const title=document.getElementById('mi-title').value.trim();
   const desc=document.getElementById('mi-desc').value.trim();
   const cat=document.getElementById('mi-cat').value;
   const assigned=document.getElementById('mi-assign').value;
-  if(!title){toast('El título es obligatorio');return}
+  if(!title){toast('El título es obligatorio');btnReset(_btn);return}
   const inc={id:'inc-'+Date.now(),title,description:desc,category:cat,reportedBy:currentUser.user,reportedByName:currentUser.name,assignedTo:assigned,status:'abierta',created:new Date().toISOString()};
   ST.incidents.push(inc);cacheLocal();await cloud('saveIncident',{incident:inc,notify:true,notifyType:'nueva'});
   // Handle photos
@@ -762,6 +770,7 @@ rMod=function(){
 
 // ═══════════ ROUTE ACTIONS ═══════════
 async function submitRoute(){
+  const _btn=event?.target;btnLoad(_btn,'Creando...');
   const name=document.getElementById('mr-name').value.trim();
   const desc=document.getElementById('mr-desc').value.trim();
   const dist=document.getElementById('mr-dist').value.trim();
@@ -883,10 +892,11 @@ rMod=function(){
 };
 
 async function submitFAQ(){
+  const _btn=event?.target;btnLoad(_btn,'Enviando...');
   const q=document.getElementById('mfq-q').value.trim();
   const a=document.getElementById('mfq-a').value.trim();
   const cat=document.getElementById('mfq-cat').value.trim();
-  if(!q||!a){toast('Pregunta y respuesta son obligatorias');return}
+  if(!q||!a){toast('Pregunta y respuesta son obligatorias');btnReset(_btn);return}
   const isAdmin=can('approveFAQ');
   const faq={id:'faq-'+Date.now(),question:q,answer:a,category:cat,approved:isAdmin,proposedBy:currentUser.name,date:new Date().toISOString()};
   ST.faqs.push(faq);cacheLocal();await cloud('saveFAQ',{faq});ST.modal=null;render();
@@ -1107,6 +1117,7 @@ rMod=function(){
 
 // ═══════════ SALIDA ACTIONS ═══════════
 async function submitSalida(){
+  const _btn=event?.target;btnLoad(_btn,'Registrando...');
   const condId=document.getElementById('ms-cond').value;
   const condName=ST.personnel.find(p=>p.id===condId)?.name||'';
   const origen=document.getElementById('ms-origen').value.trim();
@@ -1114,18 +1125,19 @@ async function submitSalida(){
   const motivo=document.getElementById('ms-motivo').value.trim();
   const kmI=parseInt(document.getElementById('ms-kmi').value)||0;
   const ubicSalida=document.getElementById('ms-ubic')?.value.trim()||'';
-  if(!condId||!destino||!kmI){toast('Conductor, destino y km de inicio son obligatorios');return}
+  if(!condId||!destino||!kmI){toast('Conductor, destino y km de inicio son obligatorios');btnReset(_btn);return}
   const salida={id:'sal-'+Date.now(),conductorId:condId,conductorNombre:condName,origen:origen||'Base Litoral',destino,motivo,kmInicio:kmI,kmFin:0,estado:'en_ruta',comentarios:'',fechaSalida:new Date().toISOString(),fechaLlegada:'',ubicSalida:ubicSalida,ubicLlegada:''};
   ST.salidas.push(salida);cacheLocal();await cloud('saveSalida',{salida});ST.modal=null;render();toast('Salida registrada');
 }
 
 async function cerrarSalida(id){
+  const _btn=event?.target;btnLoad(_btn,'Finalizando...');
   const s=ST.salidas.find(x=>x.id===id);if(!s)return;
   const kmFin=parseInt(document.getElementById('mc-kmfin').value)||0;
   const comments=document.getElementById('mc-comments').value.trim();
   const ubicLlegada=document.getElementById('mc-ubic')?.value.trim()||'';
-  if(!kmFin){toast('Introduce los km de llegada');return}
-  if(kmFin<s.kmInicio){toast('Los km de llegada deben ser mayores que los de salida');return}
+  if(!kmFin){toast('Introduce los km de llegada');btnReset(_btn);return}
+  if(kmFin<s.kmInicio){toast('Los km de llegada deben ser mayores que los de salida');btnReset(_btn);return}
   s.kmFin=kmFin;s.estado='finalizada';s.comentarios=comments;s.fechaLlegada=new Date().toISOString();s.ubicLlegada=ubicLlegada;
   cacheLocal();await cloud('saveSalida',{salida:s});ST.modal={type:'viewSalida',id};render();toast('Salida finalizada');
 }
@@ -1136,12 +1148,13 @@ async function deleteSalida(id){
 }
 
 async function submitRepostaje(salidaId){
+  const _btn=event?.target;btnLoad(_btn,'Registrando...');
   const km=parseInt(document.getElementById('mr-km').value)||0;
   const litros=parseFloat(document.getElementById('mr-litros').value)||0;
   const ubic=document.getElementById('mr-ubic').value.trim();
   const lat=document.getElementById('mr-lat').value;
   const lng=document.getElementById('mr-lng').value;
-  if(!km||!litros){toast('Kilómetros y litros son obligatorios');return}
+  if(!km||!litros){toast('Kilómetros y litros son obligatorios');btnReset(_btn);return}
   let ticketFoto='';
   const ticketInput=document.getElementById('mr-ticket');
   if(ticketInput&&ticketInput.files.length){
@@ -1179,11 +1192,12 @@ function detectarUbicacionCampo(fieldId){
 
 // ═══════════ MANUAL ACTIONS (Drive links) ═══════════
 async function submitManual(){
+  const _btn=event?.target;btnLoad(_btn,'Añadiendo...');
   const name=document.getElementById('mm-name').value.trim();
   const url=document.getElementById('mm-url').value.trim();
   const folder=document.getElementById('mm-folder').value;
   const tipo=document.getElementById('mm-tipo').value;
-  if(!name||!url){toast('Nombre y URL son obligatorios');return}
+  if(!name||!url){toast('Nombre y URL son obligatorios');btnReset(_btn);return}
   const manual={id:'man-'+Date.now(),name,folder,url,tipo,date:new Date().toISOString(),uploadedBy:currentUser.name};
   ST.manuals.push(manual);cacheLocal();await cloud('saveManual',{manual});ST.modal=null;render();toast('Documento añadido');
 }
@@ -1267,6 +1281,70 @@ function generarInforme(){
   document.body.appendChild(a);a.click();a.remove();
   URL.revokeObjectURL(url);
   toast('Informe descargado');
+}
+
+// ═══════════ TAB: AUDITORÍA (solo admin) ═══════════
+function rAud(){
+  if(currentUser.rol!=='admin')return'<div class="no-access"><h3>Sin acceso</h3></div>';
+  const logs=(ST.loginLogs||[]).slice().sort((a,b)=>b.fecha>a.fecha?1:-1);
+  let h='<div class="section"><h3 class="section-head">Registro de inicios de sesión</h3>';
+  if(!logs.length)h+='<div class="empty">Sin registros de acceso.</div>';
+  else{
+    h+='<div class="table-wrap"><table><thead><tr><th style="text-align:left">Usuario</th><th>Nombre</th><th>Rol</th><th>Fecha y hora</th><th class="hide-mobile">Dispositivo</th></tr></thead><tbody>';
+    logs.slice(0,100).forEach(l=>{
+      const rolLabel=ROLES[l.rol]?.label||l.rol;
+      const device=l.userAgent?(l.userAgent.includes('Mobile')?'Móvil':'PC'):'—';
+      h+='<tr><td>'+esc(l.user)+'</td><td class="td-center">'+esc(l.name)+'</td><td class="td-center"><span class="role-badge '+l.rol+'">'+rolLabel+'</span></td><td class="td-center" style="font-family:\'JetBrains Mono\',monospace;font-size:12px">'+fmtDT(l.fecha)+'</td><td class="td-center hide-mobile" style="font-size:12px;color:#999">'+device+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    if(logs.length>100)h+='<p style="text-align:center;font-size:12px;color:#999;margin-top:8px">Mostrando los últimos 100 accesos de '+logs.length+' totales.</p>';
+  }
+  h+='</div>';return h;
+}
+
+// ═══════════ TASK EDIT MODAL ═══════════
+function editTaskModal(taskId){
+  const t=ST.tasks.find(x=>x.id===taskId);if(!t)return;
+  ST.formData={...t};
+  ST.modal={type:'editTask',id:taskId};
+  render();
+}
+
+// Extend rMod for editTask
+const _origRMod5=rMod;
+rMod=function(){
+  const m=ST.modal;
+  if(m?.type==='editTask'){
+    const t=ST.tasks.find(x=>x.id===m.id);if(!t)return'';
+    const fd=ST.formData;
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Editar tarea</h3>'+
+      '<div class="field"><label>Título</label><input type="text" id="met-title" value="'+esc(fd.title||'')+'"></div>'+
+      '<div class="field"><label>Descripción</label><textarea id="met-desc" rows="3">'+esc(fd.description||'')+'</textarea></div>'+
+      '<div class="field"><label>Asignar a</label><select id="met-assign" multiple style="height:120px">'+ST.personnel.map(p=>{
+        const sel=(fd.assignedTo||'').split(',').map(s=>s.trim()).includes(p.id);
+        return '<option value="'+p.id+'" '+(sel?'selected':'')+'>'+esc(p.name)+'</option>';
+      }).join('')+'</select></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field" style="flex:1;min-width:120px"><label>Prioridad</label><select id="met-prio"><option value="alta" '+(fd.priority==='alta'?'selected':'')+'>Alta</option><option value="media" '+(fd.priority==='media'?'selected':'')+'>Media</option><option value="baja" '+(fd.priority==='baja'?'selected':'')+'>Baja</option></select></div>'+
+      '<div class="field" style="flex:1;min-width:120px"><label>Estado</label><select id="met-status"><option value="pendiente" '+(fd.status==='pendiente'?'selected':'')+'>Pendiente</option><option value="en_curso" '+(fd.status==='en_curso'?'selected':'')+'>En curso</option><option value="completada" '+(fd.status==='completada'?'selected':'')+'>Completada</option></select></div>'+
+      '<div class="field" style="flex:1;min-width:120px"><label>Fecha límite</label><input type="date" id="met-deadline" value="'+(fd.deadline?fd.deadline.slice(0,10):'')+'"></div></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="ST.modal={type:\'viewTask\',id:\''+m.id+'\'};render()">Cancelar</button><button class="btn btn-primary" onclick="saveTaskEdit(\''+m.id+'\')">Guardar cambios</button></div></div></div>';
+  }
+  return _origRMod5();
+};
+
+async function saveTaskEdit(id){
+  const _btn=event?.target;btnLoad(_btn,'Guardando...');
+  const t=ST.tasks.find(x=>x.id===id);if(!t){btnReset(_btn);return}
+  t.title=document.getElementById('met-title').value.trim();
+  t.description=document.getElementById('met-desc').value.trim();
+  const sel=document.getElementById('met-assign');
+  t.assignedTo=Array.from(sel.selectedOptions).map(o=>o.value).join(',');
+  t.priority=document.getElementById('met-prio').value;
+  t.status=document.getElementById('met-status').value;
+  t.deadline=document.getElementById('met-deadline').value;
+  if(!t.title){toast('El título es obligatorio');btnReset(_btn);return}
+  cacheLocal();await cloud('saveTask',{task:t,notify:true,notifyType:'actualizada'});
+  ST.modal={type:'viewTask',id};render();toast('Tarea actualizada');
 }
 
 // ═══════════ ARRANQUE ═══════════
