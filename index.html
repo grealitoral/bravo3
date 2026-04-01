@@ -118,6 +118,17 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 .chat-input-bar{display:flex;gap:8px;padding:12px 0;border-top:1px solid var(--border)}
 .chat-input-bar input{flex:1}
 .chat-config{padding:16px;background:#F8F8FA;border-radius:10px;margin-bottom:16px;font-size:13px;color:#666}
+.dash-card{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:18px;margin-bottom:12px;transition:border-color .15s}.dash-card:hover{border-color:#CCC}
+.dash-card h4{font-size:14px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.dash-alert{border-left:4px solid #E24B4A;background:#FFF5F5}.dash-warn{border-left:4px solid #E8A817;background:#FFFDF5}.dash-ok{border-left:4px solid #1D9E75;background:#F0FFF4}
+.dash-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F5F5F5;font-size:13px;gap:8px}.dash-item:last-child{border:none}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.cal-header{text-align:center;font-size:11px;font-weight:700;color:#999;padding:8px 0;text-transform:uppercase}
+.cal-day{text-align:center;padding:8px 4px;border-radius:8px;font-size:13px;min-height:44px;cursor:pointer;transition:all .15s;position:relative}.cal-day:hover{background:#F0F0F0}.cal-day.today{background:#EFF4E5;font-weight:700;color:var(--navy)}.cal-day.empty{cursor:default}.cal-day.has-event::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:var(--navy)}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.cal-nav h3{font-size:17px;font-weight:700;margin:0}
+.cad-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;margin-bottom:10px}.cad-expired{border-left:4px solid #E24B4A}.cad-soon{border-left:4px solid #E8A817}.cad-ok{border-left:4px solid #1D9E75}
+.cad-date{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600}
+.offline-bar{position:fixed;bottom:0;left:0;right:0;background:#E8A817;color:#fff;padding:8px 16px;font-size:13px;font-weight:600;text-align:center;z-index:997;display:none}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F3F3F3;font-size:14px}
 .salida-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;margin-bottom:10px;transition:border-color .15s;cursor:pointer}.salida-card:hover{border-color:#CCC}
 .salida-card.en_ruta{border-left:4px solid var(--amber)}.salida-card.finalizada{border-left:4px solid var(--green)}
 .km-badge{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--navy);background:#F4F5F7;padding:2px 8px;border-radius:6px}
@@ -133,7 +144,7 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACION
 // ══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbxI6Kb7BVPlAC6lAIn6FO1OIrz_6vxUVqDZ1RXLyDaqjrP6NU4n3FdQ4otdpITcJ5D4/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw1Knkgj5hJINj2QRuO108jO5jPzMszpZ3iQzLzR1zt6IusWoNP1jhwSVgkdVnFj163Jw/exec';
 // ══════════════════════════════════════════════════════════════
 
 // ── API (JSONP para GET, iframe para POST — evita CORS) ──
@@ -210,7 +221,7 @@ const CONSIDERACIONES=["Magnetotérmico «HIDRÁULICA» siempre subido.","Nivela
 
 // ── ESTADO ──
 let currentUser=null;
-let ST={personnel:[],records:{},videos:[],guideLogs:[],users:[],pdfs:[],tasks:[],taskComments:[],incidents:[],incidentComments:[],incidentPhotos:[],routes:[],routeLogs:[],folders:[],manuals:[],faqs:[],salidas:[],repostajes:[],loginLogs:[],tab:"guia",selDate:new Date().toISOString().slice(0,10),selGroup:"all",guideMode:null,guideStep:-1,guideConfirmed:{},guideResponsible:"",guideGenerator:"",modal:null,formData:{}};
+let ST={personnel:[],records:{},videos:[],guideLogs:[],users:[],pdfs:[],tasks:[],taskComments:[],incidents:[],incidentComments:[],incidentPhotos:[],routes:[],routeLogs:[],folders:[],manuals:[],faqs:[],salidas:[],repostajes:[],loginLogs:[],caducidades:[],checklistItems:[],checklistLogs:[],offlineQueue:[],tab:"inicio",selDate:new Date().toISOString().slice(0,10),selGroup:"all",guideMode:null,guideStep:-1,guideConfirmed:{},guideResponsible:"",guideGenerator:"",modal:null,formData:{}};
 
 // ── CARGA ──
 async function loadData(){
@@ -219,7 +230,7 @@ async function loadData(){
     ST.personnel=d.personnel||[];ST.records=d.records||{};ST.guideLogs=d.guideLogs||[];ST.videos=d.videos||[];ST.users=d.users||[];
     ST.tasks=d.tasks||[];ST.taskComments=d.taskComments||[];ST.incidents=d.incidents||[];ST.incidentComments=d.incidentComments||[];ST.incidentPhotos=d.incidentPhotos||[];
     ST.routes=d.routes||[];ST.routeLogs=d.routeLogs||[];ST.folders=d.folders||[];ST.manuals=d.manuals||[];ST.faqs=d.faqs||[];
-    ST.salidas=d.salidas||[];ST.repostajes=d.repostajes||[];ST.loginLogs=d.loginLogs||[];
+    ST.salidas=d.salidas||[];ST.repostajes=d.repostajes||[];ST.loginLogs=d.loginLogs||[];ST.caducidades=d.caducidades||[];
     try{const lp=localStorage.getItem('pma3_pdfs');if(lp)ST.pdfs=JSON.parse(lp)}catch(e){}
     cacheLocal();setSS('ok');render();
   }catch(e){console.warn('API error:',e);setSS('error');loadLocal();render()}
@@ -228,7 +239,44 @@ function loadLocal(){try{const r=localStorage.getItem('pma_bravo3_v2');if(r){con
 function cacheLocal(){try{const save={...ST};delete save.pdfs;localStorage.setItem('pma_bravo3_v2',JSON.stringify(save))}catch(e){}}
 
 // ── CLOUD OPS ──
-async function cloud(action,data){if(!apiOk())return;setSS('loading');try{await apiPost({action,...data});setSS('ok')}catch(e){setSS('error')}}
+async function cloud(action,data){
+  if(!apiOk())return;
+  setSS('loading');
+  try{
+    await apiPost({action,...data});
+    setSS('ok');
+    // Process offline queue if any
+    if(ST.offlineQueue.length){processOfflineQueue()}
+  }catch(e){
+    setSS('error');
+    // Queue for later
+    ST.offlineQueue.push({action,...data,_ts:Date.now()});
+    try{localStorage.setItem('pma3_offline_queue',JSON.stringify(ST.offlineQueue))}catch(ex){}
+    showOfflineBar(true);
+  }
+}
+async function processOfflineQueue(){
+  if(!ST.offlineQueue.length)return;
+  showOfflineBar(false);
+  const queue=[...ST.offlineQueue];
+  ST.offlineQueue=[];
+  for(const op of queue){
+    try{await apiPost(op)}catch(e){ST.offlineQueue.push(op)}
+  }
+  if(ST.offlineQueue.length){
+    try{localStorage.setItem('pma3_offline_queue',JSON.stringify(ST.offlineQueue))}catch(e){}
+    showOfflineBar(true);
+  }else{
+    try{localStorage.removeItem('pma3_offline_queue')}catch(e){}
+    toast('Cola offline sincronizada');
+  }
+}
+function showOfflineBar(show){
+  let bar=document.getElementById('offline-bar');
+  if(!bar){bar=document.createElement('div');bar.id='offline-bar';bar.className='offline-bar';document.body.appendChild(bar)}
+  if(show){bar.textContent='⚡ '+ST.offlineQueue.length+' operación(es) pendiente(s) de sincronizar';bar.style.display='block'}
+  else{bar.style.display='none'}
+}
 
 
 // ── Button loading helper ──
@@ -297,6 +345,7 @@ function render(){
   const app=document.getElementById('app');
   const r=currentUser.rol;
   const allTabs=[
+    {key:"inicio",label:"Inicio",icon:'<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"guia",label:"Guía",icon:'<path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"tareas",label:"Tareas",icon:'<path d="M16 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V8z"/><polyline points="16 3 16 9 21 9"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"incidencias",label:"Incidencias",icon:'<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',roles:['admin','art','conductor','agente','tecnico']},
@@ -309,6 +358,8 @@ function render(){
     {key:"videos",label:"Vídeos",icon:'<polygon points="5 3 19 12 5 21 5 3"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"historial",label:"Historial",icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"estadisticas",label:"Estadísticas",icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"calendario",label:"Calendario",icon:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',roles:['admin','art','conductor','agente','tecnico']},
+    {key:"caducidades",label:"Caducidades",icon:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"personal",label:"Personal",icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>',roles:['admin','art','conductor','agente','tecnico']},
     {key:"usuarios",label:"Usuarios",icon:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>',roles:['admin','art']},
     {key:"auditoria",label:"Auditoría",icon:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',roles:['admin']},
@@ -322,7 +373,7 @@ function render(){
     <span class="user-pill" onclick="ST.modal='userMenu';render()"><span class="role-dot ${r}"></span>${esc(currentUser.name)}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div></header>`;
   h+=`<nav>${tabs.map(t=>`<button class="nav-btn ${ST.tab===t.key?'active':''}" onclick="switchTab('${t.key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg><span>${t.label}</span></button>`).join('')}</nav><main>`;
 
-  const renderers={registro:rReg,historial:rHis,estadisticas:rSta,guia:rGui,manuales:rMan,videos:rVid,personal:rPer,usuarios:rUsr,tareas:rTar,incidencias:rInc,rutas:rRut,faqs:rFaq,chat:rChat,salidas:rSal,auditoria:rAud};
+  const renderers={registro:rReg,historial:rHis,estadisticas:rSta,guia:rGui,manuales:rMan,videos:rVid,personal:rPer,usuarios:rUsr,tareas:rTar,incidencias:rInc,rutas:rRut,faqs:rFaq,chat:rChat,salidas:rSal,auditoria:rAud,inicio:rDash,calendario:rCal,caducidades:rCad};
   h+=(renderers[ST.tab]||rReg)();
   h+='</main><footer>BASE LITORAL | BRAVO3 · '+esc(rolLabel)+' · Datos sincronizados con Google Sheets</footer>';
   if(ST.modal)h+=rMod();
@@ -1347,10 +1398,252 @@ async function saveTaskEdit(id){
   ST.modal={type:'viewTask',id};render();toast('Tarea actualizada');
 }
 
+// ═══════════ TAB: DASHBOARD ═══════════
+function rDash(){
+  const enRuta=ST.salidas.filter(s=>s.estado==='en_ruta');
+  const tasksPend=ST.tasks.filter(t=>t.status==='pendiente');
+  const tasksUrg=tasksPend.filter(t=>t.priority==='alta');
+  const incOpen=ST.incidents.filter(i=>i.status!=='resuelta');
+  const lastProc=ST.guideLogs.length?ST.guideLogs[ST.guideLogs.length-1]:null;
+  const now=new Date();
+  const proxDeadlines=ST.tasks.filter(t=>t.deadline&&t.status!=='completada').sort((a,b)=>a.deadline>b.deadline?1:-1).slice(0,5);
+  // Caducidades próximas
+  const proxCad=(ST.caducidades||[]).filter(c=>{
+    if(!c.fecha)return false;
+    const d=new Date(c.fecha);const diff=(d-now)/(1000*60*60*24);
+    return diff<=30&&diff>=-7;
+  });
+  const cadVencidas=(ST.caducidades||[]).filter(c=>{if(!c.fecha)return false;return new Date(c.fecha)<now});
+
+  let h='<div class="section">';
+  // Vehículo en ruta
+  if(enRuta.length){
+    h+='<div class="dash-card dash-warn"><h4>🚛 Vehículo en ruta</h4>';
+    enRuta.forEach(s=>{h+='<div class="dash-item"><span><strong>'+esc(s.conductorNombre)+'</strong> → '+esc(s.destino)+'</span><span class="status-badge en_ruta">en ruta</span></div>'});
+    h+='</div>';
+  }else{
+    h+='<div class="dash-card dash-ok"><h4>🏠 Vehículo en base</h4><p style="font-size:13px;color:#666;margin:0">No hay salidas activas.</p></div>';
+  }
+  // Alertas de caducidades
+  if(cadVencidas.length){
+    h+='<div class="dash-card dash-alert"><h4>🔴 Caducidades vencidas</h4>';
+    cadVencidas.forEach(c=>{h+='<div class="dash-item"><span>'+esc(c.nombre)+'</span><span class="cad-date" style="color:#A32D2D">'+fmtDate(c.fecha.slice(0,10))+'</span></div>'});
+    h+='</div>';
+  }
+  if(proxCad.length){
+    h+='<div class="dash-card dash-warn"><h4>⚠️ Caducidades próximas (30 días)</h4>';
+    proxCad.forEach(c=>{const d=new Date(c.fecha);const diff=Math.ceil((d-now)/(1000*60*60*24));h+='<div class="dash-item"><span>'+esc(c.nombre)+'</span><span class="cad-date" style="color:#854F0B">'+diff+' días</span></div>'});
+    h+='</div>';
+  }
+  // Tareas urgentes
+  if(tasksUrg.length){
+    h+='<div class="dash-card dash-alert"><h4>🔴 Tareas urgentes ('+tasksUrg.length+')</h4>';
+    tasksUrg.slice(0,5).forEach(t=>{h+='<div class="dash-item"><span>'+esc(t.title)+'</span><span class="prio-badge alta">alta</span></div>'});
+    h+='</div>';
+  }
+  // Tareas pendientes
+  if(tasksPend.length){
+    h+='<div class="dash-card"><h4>📋 Tareas pendientes ('+tasksPend.length+')</h4>';
+    tasksPend.slice(0,5).forEach(t=>{h+='<div class="dash-item"><span>'+esc(t.title)+'</span><span class="prio-badge '+t.priority+'">'+t.priority+'</span></div>'});
+    if(tasksPend.length>5)h+='<p style="font-size:12px;color:#999;margin:6px 0 0;text-align:center">y '+(tasksPend.length-5)+' más...</p>';
+    h+='</div>';
+  }
+  // Incidencias abiertas
+  if(incOpen.length){
+    h+='<div class="dash-card"><h4>⚠️ Incidencias abiertas ('+incOpen.length+')</h4>';
+    incOpen.slice(0,5).forEach(i=>{h+='<div class="dash-item"><span>'+esc(i.title)+'</span><span class="cat-badge">'+esc(i.category)+'</span></div>'});
+    h+='</div>';
+  }
+  // Último procedimiento
+  if(lastProc){
+    const lbl=GUIDE_LABELS[lastProc.type]||lastProc.type;
+    h+='<div class="dash-card"><h4>📒 Último procedimiento</h4><div class="dash-item"><span><span class="log-badge '+lastProc.type+'">'+lbl+'</span> '+esc(lastProc.responsible)+'</span><span style="font-size:12px;color:#999">'+fmtDT(lastProc.datetime)+'</span></div></div>';
+  }
+  // Próximas fechas límite
+  if(proxDeadlines.length){
+    h+='<div class="dash-card"><h4>📅 Próximas fechas límite</h4>';
+    proxDeadlines.forEach(t=>{const dl=t.deadline.slice(0,10);const d=new Date(dl);const diff=Math.ceil((d-now)/(1000*60*60*24));const color=diff<0?'#A32D2D':diff<=3?'#854F0B':'#666';h+='<div class="dash-item"><span>'+esc(t.title)+'</span><span class="cad-date" style="color:'+color+'">'+(diff<0?'Vencida hace '+Math.abs(diff)+' días':diff===0?'Hoy':diff+' días')+'</span></div>'});
+    h+='</div>';
+  }
+  // Stats resumen
+  h+='<div class="stats-grid" style="margin-top:16px"><div class="stat-card"><span class="label">Efectivos</span><span class="value">'+ST.personnel.length+'</span></div><div class="stat-card"><span class="label">Tareas activas</span><span class="value">'+tasksPend.length+'</span></div><div class="stat-card"><span class="label">Incidencias</span><span class="value">'+incOpen.length+'</span></div><div class="stat-card"><span class="label">Salidas totales</span><span class="value">'+ST.salidas.length+'</span></div></div>';
+  if(!enRuta.length&&!tasksUrg.length&&!incOpen.length&&!cadVencidas.length&&!proxCad.length)h+='<div style="text-align:center;padding:20px;color:#999;font-size:14px">Todo en orden. Sin alertas activas.</div>';
+  h+='</div>';return h;
+}
+
+// ═══════════ TAB: CALENDARIO ═══════════
+let calYear=new Date().getFullYear();let calMonth=new Date().getMonth();
+function rCal(){
+  const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const days=['L','M','X','J','V','S','D'];
+  const firstDay=new Date(calYear,calMonth,1);
+  let startDay=firstDay.getDay()-1;if(startDay<0)startDay=6;
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();const todayStr=today.toISOString().slice(0,10);
+
+  // Build events map
+  const events={};
+  function addEv(dateStr,type,label){if(!dateStr)return;const d=dateStr.slice(0,10);if(!events[d])events[d]=[];events[d].push({type,label})}
+  // Procedimientos
+  ST.guideLogs.forEach(l=>{addEv(l.datetime,'proc',GUIDE_LABELS[l.type]||l.type)});
+  // Salidas
+  ST.salidas.forEach(s=>{addEv(s.fechaSalida,'salida',s.origen+'→'+s.destino)});
+  // Tareas con deadline
+  ST.tasks.filter(t=>t.deadline).forEach(t=>{addEv(t.deadline,'tarea',t.title)});
+  // Registros
+  Object.keys(ST.records).forEach(d=>{addEv(d,'registro','Registro')});
+  // Caducidades
+  (ST.caducidades||[]).forEach(c=>{if(c.fecha)addEv(c.fecha,'cad',c.nombre)});
+
+  let h='<div class="section"><div class="cal-nav"><button class="btn btn-sm" onclick="calMonth--;if(calMonth<0){calMonth=11;calYear--}render()">← Anterior</button><h3>'+months[calMonth]+' '+calYear+'</h3><button class="btn btn-sm" onclick="calMonth++;if(calMonth>11){calMonth=0;calYear++}render()">Siguiente →</button></div>';
+  h+='<div class="cal-grid">';
+  days.forEach(d=>{h+='<div class="cal-header">'+d+'</div>'});
+  for(let i=0;i<startDay;i++)h+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday=ds===todayStr;
+    const evs=events[ds]||[];
+    h+='<div class="cal-day'+(isToday?' today':'')+(evs.length?' has-event':'')+'" onclick="'+(evs.length?"showCalDay('"+ds+"')":'')+'" title="'+(evs.length?evs.length+' evento(s)':'')+'">'+d+'</div>';
+  }
+  h+='</div>';
+
+  // Legend
+  h+='<div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;font-size:12px;color:#888"><span>● = día con actividad</span></div>';
+  h+='</div>';return h;
+}
+function showCalDay(ds){
+  // Build events for this day
+  const evs=[];
+  ST.guideLogs.filter(l=>l.datetime&&l.datetime.slice(0,10)===ds).forEach(l=>{evs.push({type:'Procedimiento',desc:(GUIDE_LABELS[l.type]||l.type)+' — '+l.responsible})});
+  ST.salidas.filter(s=>s.fechaSalida&&s.fechaSalida.slice(0,10)===ds).forEach(s=>{evs.push({type:'Salida',desc:s.origen+' → '+s.destino+' ('+s.conductorNombre+')'})});
+  ST.tasks.filter(t=>t.deadline&&t.deadline.slice(0,10)===ds).forEach(t=>{evs.push({type:'Tarea',desc:t.title+' ['+t.priority+']'})});
+  if(ST.records[ds])evs.push({type:'Registro',desc:Object.keys(ST.records[ds]).length+' efectivos registrados'});
+  (ST.caducidades||[]).filter(c=>c.fecha&&c.fecha.slice(0,10)===ds).forEach(c=>{evs.push({type:'Caducidad',desc:c.nombre})});
+
+  let i='<h3>'+fmtDate(ds)+'</h3>';
+  if(!evs.length)i+='<p style="color:#999">Sin eventos este día.</p>';
+  else evs.forEach(e=>{i+='<div class="dash-item"><span class="cat-badge">'+esc(e.type)+'</span><span style="flex:1;margin-left:8px">'+esc(e.desc)+'</span></div>'});
+  i+='<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+  ST.modal={type:'_custom',html:i};render();
+}
+
+// ═══════════ TAB: CADUCIDADES ═══════════
+function rCad(){
+  const ed=can('editRecords');
+  const now=new Date();
+  const items=(ST.caducidades||[]).sort((a,b)=>{if(!a.fecha)return 1;if(!b.fecha)return -1;return a.fecha>b.fecha?1:-1});
+  let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Control de caducidades y revisiones</h3>'+(ed?'<button class="btn btn-primary" onclick="ST.modal=\'addCaducidad\';ST.formData={};render()">+ Añadir</button>':'')+'</div>';
+  if(!items.length)h+='<div class="empty">Sin elementos registrados. '+(ed?'Pulsa "+ Añadir" para registrar la primera caducidad.':'')+'</div>';
+  else items.forEach(c=>{
+    const d=c.fecha?new Date(c.fecha):null;
+    const diff=d?Math.ceil((d-now)/(1000*60*60*24)):999;
+    const cls=diff<0?'cad-expired':diff<=30?'cad-soon':'cad-ok';
+    const statusText=diff<0?'VENCIDO hace '+Math.abs(diff)+' días':diff===0?'VENCE HOY':diff<=30?'Vence en '+diff+' días':'OK — '+diff+' días';
+    const statusColor=diff<0?'#A32D2D':diff<=30?'#854F0B':'#1D9E75';
+    h+='<div class="cad-card '+cls+'"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div><p style="font-size:15px;font-weight:700;margin:0 0 4px">'+esc(c.nombre)+'</p>';
+    if(c.descripcion)h+='<p style="font-size:13px;color:#666;margin:0 0 6px">'+esc(c.descripcion)+'</p>';
+    h+='<p style="margin:0"><span class="cad-date">'+( c.fecha?fmtDate(c.fecha.slice(0,10)):'Sin fecha')+'</span> <span style="font-size:12px;font-weight:600;color:'+statusColor+'">'+statusText+'</span></p></div>';
+    if(ed)h+='<div style="display:flex;gap:4px"><button class="btn-sm" onclick="editCaducidad(\''+c.id+'\')">Editar</button><button class="btn-danger" onclick="deleteCaducidad(\''+c.id+'\')">Eliminar</button></div>';
+    h+='</div></div>';
+  });
+  h+='</div>';return h;
+}
+
+// ═══════════ CHECKLIST PRE-SALIDA ═══════════
+const DEFAULT_CHECKLIST=['Niveles de aceite y líquidos','Presión de neumáticos','Estado general de carrocería','Combustible mínimo'];
+function getChecklist(){return ST.checklistItems.length?ST.checklistItems:DEFAULT_CHECKLIST.map((n,i)=>({id:'ck-'+i,nombre:n}))}
+function renderChecklist(salidaId){
+  const items=getChecklist();
+  let h='<h3>Checklist pre-salida</h3><p style="font-size:13px;color:#888;margin:0 0 16px">Verifica todos los puntos antes de registrar la salida.</p>';
+  items.forEach((item,i)=>{
+    h+='<div class="checklist-item"><span class="ck" id="ck-item-'+i+'" onclick="this.classList.toggle(\'on\');this.innerHTML=this.classList.contains(\'on\')?\'<svg viewBox=\\\'0 0 24 24\\\' fill=\\\'none\\\' stroke=\\\'#fff\\\' stroke-width=\\\'3.5\\\' stroke-linecap=\\\'round\\\'><polyline points=\\\'20 6 9 17 4 12\\\'/></svg>\':\'\'"><\/span><span>'+esc(item.nombre||item)+'</span></div>';
+  });
+  h+='<div class="modal-actions" style="margin-top:16px"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="confirmChecklist(\''+salidaId+'\')">Todo verificado — continuar</button></div>';
+  return h;
+}
+function confirmChecklist(salidaId){
+  const items=getChecklist();
+  const allChecked=items.every((item,i)=>{const el=document.getElementById('ck-item-'+i);return el&&el.classList.contains('on')});
+  if(!allChecked){toast('Debes verificar todos los puntos del checklist');return}
+  // Log the checklist
+  const log={id:'clog-'+Date.now(),salidaId:salidaId||'pre-'+Date.now(),user:currentUser.user,nombre:currentUser.name,fecha:new Date().toISOString(),items:items.map(i=>i.nombre||i)};
+  ST.checklistLogs.push(log);
+  // Now open the actual salida form
+  ST.modal='addSalida';ST.formData={checklistDone:true};render();
+}
+
+// ═══════════ CADUCIDAD ACTIONS ═══════════
+async function submitCaducidad(){
+  const _btn=event?.target;btnLoad(_btn,'Guardando...');
+  const nombre=document.getElementById('mc-nombre').value.trim();
+  const desc=document.getElementById('mc-desc').value.trim();
+  const fecha=document.getElementById('mc-fecha').value;
+  if(!nombre){toast('El nombre es obligatorio');btnReset(_btn);return}
+  const cad={id:'cad-'+Date.now(),nombre,descripcion:desc,fecha,creadoPor:currentUser.user};
+  ST.caducidades.push(cad);cacheLocal();await cloud('saveCaducidad',{caducidad:cad});ST.modal=null;render();toast('Caducidad registrada');
+}
+function editCaducidad(id){const c=ST.caducidades.find(x=>x.id===id);if(!c)return;ST.formData={...c};ST.modal={type:'editCaducidad',id};render()}
+async function updateCaducidad(id){
+  const _btn=event?.target;btnLoad(_btn,'Guardando...');
+  const c=ST.caducidades.find(x=>x.id===id);if(!c){btnReset(_btn);return}
+  c.nombre=document.getElementById('mc-nombre').value.trim();
+  c.descripcion=document.getElementById('mc-desc').value.trim();
+  c.fecha=document.getElementById('mc-fecha').value;
+  if(!c.nombre){toast('El nombre es obligatorio');btnReset(_btn);return}
+  cacheLocal();await cloud('saveCaducidad',{caducidad:c});ST.modal=null;render();toast('Actualizado');
+}
+async function deleteCaducidad(id){
+  ST.caducidades=ST.caducidades.filter(c=>c.id!==id);cacheLocal();await cloud('deleteCaducidad',{id});render();toast('Eliminado');
+}
+
+// ═══════════ CADUCIDAD + CHECKLIST + CALENDAR MODALS ═══════════
+const _origRMod6=rMod;
+rMod=function(){
+  const m=ST.modal;
+  if(m==='addCaducidad'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Añadir caducidad/revisión</h3>'+
+      '<div class="field"><label>Nombre</label><input type="text" id="mc-nombre" placeholder="ej: ITV, Seguro, Extintores..."></div>'+
+      '<div class="field"><label>Descripción (opcional)</label><input type="text" id="mc-desc" placeholder="Detalles adicionales"></div>'+
+      '<div class="field"><label>Fecha de caducidad/revisión</label><input type="date" id="mc-fecha"></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="submitCaducidad()">Guardar</button></div></div></div>';
+  }
+  if(m?.type==='editCaducidad'){
+    const fd=ST.formData;
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()"><h3>Editar caducidad</h3>'+
+      '<div class="field"><label>Nombre</label><input type="text" id="mc-nombre" value="'+esc(fd.nombre||'')+'"></div>'+
+      '<div class="field"><label>Descripción</label><input type="text" id="mc-desc" value="'+esc(fd.descripcion||'')+'"></div>'+
+      '<div class="field"><label>Fecha</label><input type="date" id="mc-fecha" value="'+(fd.fecha?fd.fecha.slice(0,10):'')+'"></div>'+
+      '<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="updateCaducidad(\''+m.id+'\')">Guardar</button></div></div></div>';
+  }
+  if(m==='configChecklist'){
+    const items=getChecklist();
+    let i='<h3>Configurar checklist pre-salida</h3>';
+    items.forEach((item,idx)=>{i+='<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #F3F3F3"><span style="flex:1;font-size:14px">'+esc(item.nombre||item)+'</span><button class="btn-danger" onclick="removeChecklistItem('+idx+')">Eliminar</button></div>'});
+    i+='<div style="display:flex;gap:8px;margin-top:12px"><input type="text" id="mcl-name" placeholder="Nuevo elemento" style="flex:1"><button class="btn btn-primary" onclick="addChecklistItem()">Añadir</button></div>';
+    i+='<div class="modal-actions" style="margin-top:16px"><button class="btn-sm" onclick="closeModal()">Cerrar</button></div>';
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+i+'</div></div>';
+  }
+  if(m==='preChecklist'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+renderChecklist('')+'</div></div>';
+  }
+  if(m?.type==='_custom'){
+    return '<div class="overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+m.html+'</div></div>';
+  }
+  return _origRMod6();
+};
+
+function addChecklistItem(){const n=document.getElementById('mcl-name').value.trim();if(!n)return;ST.checklistItems=getChecklist();ST.checklistItems.push({id:'ck-'+Date.now(),nombre:n});cacheLocal();ST.modal='configChecklist';render();toast('Elemento añadido')}
+function removeChecklistItem(idx){ST.checklistItems=getChecklist();ST.checklistItems.splice(idx,1);cacheLocal();ST.modal='configChecklist';render();toast('Eliminado')}
+
+// ── Online/Offline listeners ──
+window.addEventListener('online',function(){if(ST.offlineQueue.length){toast('Conexión recuperada — sincronizando...');processOfflineQueue()}});
+window.addEventListener('offline',function(){toast('Sin conexión — los datos se guardarán localmente')});
+
 // ═══════════ ARRANQUE ═══════════
 (function(){
   const saved=localStorage.getItem('pma3_session');
   if(saved){try{currentUser=JSON.parse(saved)}catch(e){}}
+  try{const oq=localStorage.getItem('pma3_offline_queue');if(oq)ST.offlineQueue=JSON.parse(oq)}catch(e){}
   if(currentUser){loadData()}else{renderLogin()}
 })();
 </script>
