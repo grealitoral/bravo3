@@ -173,6 +173,97 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 :root.dark-theme .empty,:root.auto-theme .empty{color:var(--text3)}
 :root.dark-theme footer,:root.auto-theme footer{color:var(--text3);border-color:var(--border)}
 
+/* Dark mode: Dashboard cards with colored backgrounds */
+:root.dark-theme .dash-card,:root.auto-theme .dash-card{background:var(--card);color:var(--text)}
+:root.dark-theme .dash-alert,:root.auto-theme .dash-alert{background:rgba(226,75,74,.12);border-left-color:#FF6B6A}
+:root.dark-theme .dash-warn,:root.auto-theme .dash-warn{background:rgba(232,168,23,.12);border-left-color:#FFC947}
+:root.dark-theme .dash-ok,:root.auto-theme .dash-ok{background:rgba(29,158,117,.12);border-left-color:#3DC68E}
+:root.dark-theme .dash-card h4,:root.auto-theme .dash-card h4{color:var(--text)}
+:root.dark-theme .dash-card p,:root.auto-theme .dash-card p{color:var(--text2)!important}
+:root.dark-theme .dash-item,:root.auto-theme .dash-item{color:var(--text)}
+:root.dark-theme .dash-item span,:root.auto-theme .dash-item span{color:var(--text)}
+
+/* Dark mode: Cards and containers */
+:root.dark-theme .card,:root.auto-theme .card{background:var(--card);color:var(--text)}
+:root.dark-theme .card-header,:root.auto-theme .card-header{background:var(--surface);border-color:var(--border)}
+:root.dark-theme .table-wrap,:root.auto-theme .table-wrap{background:var(--card);border-color:var(--border)}
+:root.dark-theme tr:hover,:root.auto-theme tr:hover{background:var(--surface)}
+
+/* Dark mode: Buttons */
+:root.dark-theme .btn-sm,:root.auto-theme .btn-sm{background:var(--surface2);color:var(--text);border-color:var(--border-strong)}
+:root.dark-theme .btn-sm:hover,:root.auto-theme .btn-sm:hover{background:var(--border-strong)}
+:root.dark-theme .btn-primary,:root.auto-theme .btn-primary{background:var(--navy);color:#fff}
+:root.dark-theme .btn-primary:hover,:root.auto-theme .btn-primary:hover{background:#8FBB4D}
+
+/* Dark mode: Task/incident cards */
+:root.dark-theme .task-tag,:root.auto-theme .task-tag{background:rgba(55,138,221,.18);color:#7BC4F0}
+:root.dark-theme .driver-tag,:root.auto-theme .driver-tag{background:rgba(232,168,23,.18);color:#FFC947;border-color:rgba(232,168,23,.3)}
+
+/* Dark mode: Role badges */
+:root.dark-theme .role-badge.admin,:root.auto-theme .role-badge.admin{background:rgba(226,75,74,.18);color:#FF8585}
+:root.dark-theme .role-badge.art,:root.auto-theme .role-badge.art{background:rgba(212,83,126,.18);color:#F08CAE}
+:root.dark-theme .role-badge.conductor,:root.auto-theme .role-badge.conductor{background:rgba(232,168,23,.18);color:#FFC947}
+:root.dark-theme .role-badge.agente,:root.auto-theme .role-badge.agente,:root.dark-theme .role-badge.tecnico,:root.auto-theme .role-badge.tecnico{background:rgba(55,138,221,.18);color:#7BC4F0}
+
+/* Dark mode: Log badges */
+:root.dark-theme .log-badge.apertura,:root.auto-theme .log-badge.apertura{background:rgba(55,138,221,.18);color:#7BC4F0}
+:root.dark-theme .log-badge.cierre,:root.auto-theme .log-badge.cierre{background:rgba(212,83,126,.18);color:#F08CAE}
+:root.dark-theme .log-badge.trampilla_open,:root.auto-theme .log-badge.trampilla_open,:root.dark-theme .log-badge.trampilla_close,:root.auto-theme .log-badge.trampilla_close{background:rgba(232,168,23,.18);color:#FFC947}
+:root.dark-theme .gen-badge,:root.auto-theme .gen-badge{background:rgba(29,158,117,.18);color:#3DC68E}
+
+/* Dark mode: Diff/priority badges */
+:root.dark-theme .diff-badge.facil,:root.auto-theme .diff-badge.facil{background:rgba(29,158,117,.18);color:#3DC68E}
+:root.dark-theme .diff-badge.media,:root.auto-theme .diff-badge.media{background:rgba(232,168,23,.18);color:#FFC947}
+:root.dark-theme .diff-badge.dificil,:root.auto-theme .diff-badge.dificil{background:rgba(226,75,74,.18);color:#FF8585}
+
+/* Dark mode: Step confirm and warnings */
+:root.dark-theme .step-confirm,:root.auto-theme .step-confirm{background:rgba(29,158,117,.12);border-color:rgba(29,158,117,.4)}
+:root.dark-theme .step-confirm .confirm-text,:root.auto-theme .step-confirm .confirm-text{color:#7FDBAF}
+:root.dark-theme .step-warning,:root.auto-theme .step-warning{background:rgba(232,168,23,.12);border-color:rgba(232,168,23,.4)}
+:root.dark-theme .step-warning.danger,:root.auto-theme .step-warning.danger{background:rgba(226,75,74,.12);border-color:rgba(226,75,74,.4)}
+:root.dark-theme .step-warning .warn-text,:root.auto-theme .step-warning .warn-text{color:var(--text)}
+:root.dark-theme .step-substep,:root.auto-theme .step-substep{color:var(--text2)}
+:root.dark-theme .step-text,:root.auto-theme .step-text{color:var(--text)}
+:root.dark-theme .step-number.apertura,:root.auto-theme .step-number.apertura{background:rgba(55,138,221,.18);color:#7BC4F0}
+:root.dark-theme .step-number.cierre,:root.auto-theme .step-number.cierre{background:rgba(212,83,126,.18);color:#F08CAE}
+:root.dark-theme .step-number.trampilla_open,:root.auto-theme .step-number.trampilla_open,:root.dark-theme .step-number.trampilla_close,:root.auto-theme .step-number.trampilla_close{background:rgba(232,168,23,.18);color:#FFC947}
+:root.dark-theme .step-card,:root.auto-theme .step-card{background:var(--card);border-color:var(--border)}
+
+/* Dark mode: Wizard cards */
+:root.dark-theme .wizard-card,:root.auto-theme .wizard-card{background:var(--card);border-color:var(--border)}
+:root.dark-theme .wizard-card .wc-title,:root.auto-theme .wizard-card .wc-title{color:var(--text)}
+:root.dark-theme .wizard-card .wc-desc,:root.auto-theme .wizard-card .wc-desc{color:var(--text2)}
+
+/* Dark mode: Login error (still used in login page which has its own theme) */
+:root.dark-theme .setup-box,:root.auto-theme .setup-box{background:var(--card);border-color:var(--border)}
+:root.dark-theme .setup-box h3,:root.auto-theme .setup-box h3{color:var(--text)}
+:root.dark-theme .setup-box .sub,:root.auto-theme .setup-box .sub{color:var(--text2)}
+
+/* Dark mode: Person rows / user cards / manual items */
+:root.dark-theme .person-row,:root.auto-theme .person-row{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .user-card,:root.auto-theme .user-card{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .manual-item,:root.auto-theme .manual-item{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .pdf-card,:root.auto-theme .pdf-card{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .route-card,:root.auto-theme .route-card{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .folder-tab,:root.auto-theme .folder-tab{background:var(--card);color:var(--text);border-color:var(--border)}
+:root.dark-theme .video-card,:root.auto-theme .video-card{background:var(--card);border-color:var(--border);color:var(--text)}
+
+/* Dark mode: override hardcoded inline colors in common places */
+:root.dark-theme [style*="color:#666"],:root.auto-theme [style*="color:#666"]{color:var(--text2)!important}
+:root.dark-theme [style*="color:#555"],:root.auto-theme [style*="color:#555"]{color:var(--text2)!important}
+:root.dark-theme [style*="color:#444"],:root.auto-theme [style*="color:#444"]{color:var(--text)!important}
+:root.dark-theme [style*="color:#333"],:root.auto-theme [style*="color:#333"]{color:var(--text)!important}
+:root.dark-theme [style*="color:#999"],:root.auto-theme [style*="color:#999"]{color:var(--text3)!important}
+:root.dark-theme [style*="color:#888"],:root.auto-theme [style*="color:#888"]{color:var(--text2)!important}
+:root.dark-theme [style*="color:#8A8A8A"],:root.auto-theme [style*="color:#8A8A8A"]{color:var(--text2)!important}
+:root.dark-theme [style*="color:#BBB"],:root.auto-theme [style*="color:#BBB"]{color:var(--text3)!important}
+:root.dark-theme [style*="color:#1A1A2E"],:root.auto-theme [style*="color:#1A1A2E"]{color:var(--text)!important}
+:root.dark-theme [style*="background:#F4F5F7"],:root.auto-theme [style*="background:#F4F5F7"]{background:var(--surface2)!important}
+:root.dark-theme [style*="background:#F8F8FA"],:root.auto-theme [style*="background:#F8F8FA"]{background:var(--surface)!important}
+:root.dark-theme [style*="background:#FFF"],:root.auto-theme [style*="background:#FFF"]{background:var(--card)!important}
+:root.dark-theme [style*="background:#fff"],:root.auto-theme [style*="background:#fff"]{background:var(--card)!important}
+:root.dark-theme [style*="border:1px solid #E4E4E4"],:root.auto-theme [style*="border:1px solid #E4E4E4"]{border-color:var(--border)!important}
+
 /* Theme toggle button */
 .theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:none;background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;flex-shrink:0}
 .theme-toggle:hover{background:var(--border-strong)}
