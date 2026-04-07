@@ -205,6 +205,36 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 :root.dark-theme .role-badge.conductor,:root.auto-theme .role-badge.conductor{background:rgba(232,168,23,.18);color:#FFC947}
 :root.dark-theme .role-badge.agente,:root.auto-theme .role-badge.agente,:root.dark-theme .role-badge.tecnico,:root.auto-theme .role-badge.tecnico{background:rgba(55,138,221,.18);color:#7BC4F0}
 
+/* Dark mode: Priority badges (tareas) */
+:root.dark-theme .prio-badge.alta,:root.auto-theme .prio-badge.alta{background:rgba(226,75,74,.2);color:#FF8585}
+:root.dark-theme .prio-badge.media,:root.auto-theme .prio-badge.media{background:rgba(232,168,23,.2);color:#FFC947}
+:root.dark-theme .prio-badge.baja,:root.auto-theme .prio-badge.baja{background:rgba(29,158,117,.2);color:#3DC68E}
+
+/* Dark mode: Status badges (tareas, incidencias, salidas) */
+:root.dark-theme .status-badge.pendiente,:root.auto-theme .status-badge.pendiente,:root.dark-theme .status-badge.abierta,:root.auto-theme .status-badge.abierta{background:rgba(226,75,74,.2);color:#FF8585}
+:root.dark-theme .status-badge.en_curso,:root.auto-theme .status-badge.en_curso,:root.dark-theme .status-badge.en_ruta,:root.auto-theme .status-badge.en_ruta{background:rgba(232,168,23,.2);color:#FFC947}
+:root.dark-theme .status-badge.completada,:root.auto-theme .status-badge.completada,:root.dark-theme .status-badge.resuelta,:root.auto-theme .status-badge.resuelta,:root.dark-theme .status-badge.finalizada,:root.auto-theme .status-badge.finalizada{background:rgba(29,158,117,.2);color:#3DC68E}
+
+/* Dark mode: Category badge (incidencias) */
+:root.dark-theme .cat-badge,:root.auto-theme .cat-badge{background:rgba(127,119,221,.2);color:#B4AEF0}
+
+/* Dark mode: Task cards and titles */
+:root.dark-theme .task-card,:root.auto-theme .task-card{background:var(--card);border-color:var(--border);color:var(--text)}
+:root.dark-theme .tc-title,:root.auto-theme .tc-title{color:var(--text)}
+:root.dark-theme .tc-head,:root.auto-theme .tc-head{color:var(--text)}
+
+/* Dark mode: Navigation - inactive tabs must be more visible */
+:root.dark-theme nav,:root.auto-theme nav{border-color:var(--border)}
+:root.dark-theme .nav-btn,:root.auto-theme .nav-btn{color:#B0B0B8}
+:root.dark-theme .nav-btn:hover,:root.auto-theme .nav-btn:hover{background:var(--surface2);color:var(--text)}
+:root.dark-theme .nav-btn.active,:root.auto-theme .nav-btn.active{background:var(--navy);color:#fff}
+
+/* Dark mode: Sync badge (ok) */
+:root.dark-theme .sync-badge.ok,:root.auto-theme .sync-badge.ok{background:rgba(29,158,117,.2);color:#3DC68E}
+:root.dark-theme .sync-badge.loading,:root.auto-theme .sync-badge.loading{background:rgba(232,168,23,.2);color:#FFC947}
+:root.dark-theme .sync-badge.error,:root.auto-theme .sync-badge.error{background:rgba(226,75,74,.2);color:#FF8585}
+:root.dark-theme .sync-badge.local,:root.auto-theme .sync-badge.local{background:var(--surface2);color:var(--text2)}
+
 /* Dark mode: Log badges */
 :root.dark-theme .log-badge.apertura,:root.auto-theme .log-badge.apertura{background:rgba(55,138,221,.18);color:#7BC4F0}
 :root.dark-theme .log-badge.cierre,:root.auto-theme .log-badge.cierre{background:rgba(212,83,126,.18);color:#F08CAE}
