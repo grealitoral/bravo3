@@ -101,6 +101,11 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 .diff-badge.facil{background:#EAF3DE;color:#3B6D11}.diff-badge.media{background:#FEF7E0;color:#854F0B}.diff-badge.dificil{background:#FCEBEB;color:#A32D2D}
 .route-card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:18px;margin-bottom:10px;transition:border-color .15s}.route-card:hover{border-color:#CCC}
 .route-stat{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#888;margin-right:12px}
+.folder-scroll::-webkit-scrollbar{height:8px}
+.folder-scroll::-webkit-scrollbar-track{background:#F4F5F7;border-radius:4px}
+.folder-scroll::-webkit-scrollbar-thumb{background:#999;border-radius:4px}
+.folder-scroll::-webkit-scrollbar-thumb:hover{background:#666}
+.folder-scroll{scrollbar-width:thin;scrollbar-color:#999 #F4F5F7}
 .folder-tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .15s;white-space:nowrap}.folder-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .search-box{position:relative;margin-bottom:16px}.search-box input{padding-left:36px}.search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none}
 .manual-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;gap:10px;flex-wrap:wrap;background:var(--card);transition:border-color .15s}.manual-item:hover{border-color:#CCC}
@@ -461,8 +466,7 @@ function rMan(){
   if(manualSearch) filtered=filtered.filter(p=>p.name.toLowerCase().includes(manualSearch.toLowerCase()));
 
   let h='<div class="section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h3 class="section-head" style="margin:0">Manuales y documentación</h3><div style="display:flex;gap:8px">'+(ed?'<button class="btn btn-sm" onclick="ST.modal=\'manageFolders\';render()">Carpetas</button><button class="btn btn-primary" onclick="ST.modal=\'addManual\';ST.formData={folder:manualFolder!==\'all\'?manualFolder:ST.folders[0]?.id||\'c-default\'};render()">+ Añadir enlace</button>':'')+'</div></div>';
-  h+='<div class="search-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar manual..." value="'+esc(manualSearch)+'" oninput="manualSearch=this.value;render()"></div>';
-  h+='<div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px">';
+ h+='<div class="search-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="manual-search-input" placeholder="Buscar manual..." value="'+esc(manualSearch)+'" oninput="updateManualSearch(this.value)"></div>';  h+='<div class="folder-scroll" style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px">';
   folders.forEach(f=>{h+='<span class="folder-tab '+(manualFolder===f.id?'active':'')+'" onclick="manualFolder=\''+f.id+'\';render()">'+esc(f.name)+'</span>'});
   h+='</div>';
   if(!filtered.length)h+='<div class="empty">'+(ST.manuals.length?'No se encontraron manuales.':'Sin manuales. '+(ed?'Pulsa "+ Añadir enlace" para vincular un documento de Google Drive.':''))+'</div>';
@@ -472,6 +476,30 @@ function rMan(){
     const iconColor=m.tipo==='youtube'?'E24B4A':'D4537E';
     h+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(ed?'<button class="btn-danger" onclick="deleteManual(\''+m.id+'\')">Eliminar</button>':'')+'</div></div>'});
   h+='</div>';return h;
+}
+function updateManualSearch(value){
+  manualSearch=value;
+  // Actualizar solo la lista de manuales sin re-renderizar todo
+  const folders=[{id:'all',name:'Todos'},...ST.folders.sort((a,b)=>(a.order||0)-(b.order||0))];
+  let filtered=ST.manuals||[];
+  if(manualFolder!=='all') filtered=filtered.filter(p=>p.folder===manualFolder);
+  if(manualSearch) filtered=filtered.filter(p=>p.name.toLowerCase().includes(manualSearch.toLowerCase()));
+  // Buscar el contenedor de la lista (el div después de las pestañas de carpetas)
+  const section=document.querySelector('#app .section');
+  if(!section)return;
+  // Eliminar resultados anteriores y empty
+  const oldItems=section.querySelectorAll('.manual-item, .empty');
+  oldItems.forEach(el=>el.remove());
+  // Insertar nuevos resultados al final del section
+  let html='';
+  if(!filtered.length)html='<div class="empty">'+(ST.manuals.length?'No se encontraron manuales.':'Sin manuales.')+'</div>';
+  else filtered.forEach(m=>{
+    const folderName=ST.folders.find(f=>f.id===m.folder)?.name||'General';
+    const icon=m.tipo==='youtube'?'VID':'PDF';
+    const iconColor=m.tipo==='youtube'?'E24B4A':'D4537E';
+    html+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(can('uploadManuals')?'<button class="btn-danger" onclick="deleteManual(\\''+m.id+'\\')">Eliminar</button>':'')+'</div></div>';
+  });
+  section.insertAdjacentHTML('beforeend',html);
 }
 
 // ═══════════ TAB: VÍDEOS ═══════════
@@ -530,7 +558,33 @@ function playVideo(id){ST.modal={type:'playVideo',id};render()}
 
 // ── Usuarios ──
 function editUser(username){const u=ST.users.find(x=>x.user===username);if(!u)return;ST.formData={...u,password:''};ST.modal='editUser';render()}
-async function submitUser(editing){const _btn=event?.target;btnLoad(_btn,editing?'Guardando...':'Creando...');const name=document.getElementById('m-uname').value.trim();const user=document.getElementById('m-uuser').value.trim();const pass=document.getElementById('m-upass').value;const rol=document.getElementById('m-urol').value;const personaId=document.getElementById('m-upersona').value;const active=document.getElementById('m-uactive').checked;const email=document.getElementById('m-uemail')?.value.trim()||'';if(!name||!user)return;if(!editing&&!pass){toast('La contraseña es obligatoria');return}
+async function submitUser(editing){
+  const _btn=event?.target;btnLoad(_btn,editing?'Guardando...':'Creando...');
+  const name=document.getElementById('m-uname').value.trim();
+  const user=document.getElementById('m-uuser').value.trim();
+  const pass=document.getElementById('m-upass').value;
+  const rol=document.getElementById('m-urol').value;
+  const personaId=document.getElementById('m-upersona').value;
+  const active=document.getElementById('m-uactive').checked;
+  const email=document.getElementById('m-uemail')?.value.trim()||'';
+  if(!name||!user){btnReset(_btn);return}
+  if(!editing&&!pass){toast('La contraseña es obligatoria');btnReset(_btn);return}
+  // Construir objeto de usuario individual
+  const userData={user,name,rol,personaId,active,email};
+  if(pass)userData.password=pass; // Solo enviar password si se cambió
+  // Actualizar estado local SIN guardar password
+  if(editing){
+    const idx=ST.users.findIndex(u=>u.user===user);
+    if(idx>=0)ST.users[idx]={...ST.users[idx],name,rol,personaId,active,email};
+  }else{
+    if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');btnReset(_btn);return}
+    ST.users.push({user,name,rol,personaId,active,email});
+  }
+  cacheLocal();
+  // Usar saveSingleUser para no afectar a otros usuarios
+  await cloud('saveSingleUser',{userData});
+  ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado');
+}
   if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active,email};if(pass)ST.users[idx].password=pass}}
   else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active,email})}
   cacheLocal();await cloud('saveUsers',{users:ST.users});ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado')}
