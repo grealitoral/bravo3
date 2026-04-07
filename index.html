@@ -149,7 +149,7 @@ footer{padding:16px 0;text-align:center;font-size:11px;color:var(--text3);border
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACION
 // ══════════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycby5CMqVHtD8j5GCmcZW59d0Y2n4FKqtA_kVewuZYrmwh2XwntOgOVmeUafJJut3BdAv/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwpleTvMZFtmAIWvTdlfODOcujdDiEl-hVQeMbL65tnjBrlZk3tGIYDuMO7d0-hGx3d-w/exec';
 // ══════════════════════════════════════════════════════════════
 
 // ── API (JSONP para GET, iframe para POST — evita CORS) ──
@@ -497,7 +497,7 @@ function updateManualSearch(value){
     const folderName=ST.folders.find(f=>f.id===m.folder)?.name||'General';
     const icon=m.tipo==='youtube'?'VID':'PDF';
     const iconColor=m.tipo==='youtube'?'E24B4A':'D4537E';
-    html+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(can('uploadManuals')?'<button class="btn-danger" onclick="deleteManual(\\''+m.id+'\\')">Eliminar</button>':'')+'</div></div>';
+    html+='<div class="manual-item"><div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0"><div class="pdf-icon" style="background:#'+iconColor+'">'+icon+'</div><div style="min-width:0;flex:1"><p style="font-size:14px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(m.name)+'</p><p style="font-size:12px;color:#999;margin:2px 0 0">'+esc(folderName)+'</p></div></div><div style="display:flex;gap:6px"><a href="'+esc(m.url)+'" target="_blank" class="btn-sm" style="text-decoration:none">Abrir</a>'+(can('uploadManuals')?'<button class="btn-danger" onclick="deleteManual(\''+m.id+'\')">Eliminar</button>':'')+'</div></div>';
   });
   section.insertAdjacentHTML('beforeend',html);
 }
@@ -585,9 +585,6 @@ async function submitUser(editing){
   await cloud('saveSingleUser',{userData});
   ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado');
 }
-  if(editing){const idx=ST.users.findIndex(u=>u.user===user);if(idx>=0){ST.users[idx]={...ST.users[idx],name,rol,personaId,active,email};if(pass)ST.users[idx].password=pass}}
-  else{if(ST.users.find(u=>u.user===user)){toast('El usuario ya existe');return}ST.users.push({user,password:pass,name,rol,personaId,active,email})}
-  cacheLocal();await cloud('saveUsers',{users:ST.users});ST.modal=null;render();toast(editing?'Usuario actualizado':'Usuario creado')}
 async function doChangePass(){const old=document.getElementById('m-oldpass').value;const np=document.getElementById('m-newpass').value;const np2=document.getElementById('m-newpass2').value;if(!old||!np){toast('Rellena todos los campos');return}if(np!==np2){toast('Las contraseñas no coinciden');return}try{const res=await apiPost({action:'changePassword',user:currentUser.user,oldPass:old,newPass:np});if(res.error){toast(res.error);return}toast('Contraseña cambiada');closeModal()}catch(e){toast('Error: '+e.message)}}
 
 // Custom gen select
